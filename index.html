@@ -3,1091 +3,734 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Countries & Capitals Trivia</title>
+  <title>RACE Method Practice</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root {
+      --blue:   #2563eb;
+      --green:  #16a34a;
+      --yellow: #ca8a04;
+      --red:    #dc2626;
+      --purple: #7c3aed;
+      --bg:     #f0f4ff;
+      --card:   #ffffff;
+      --border: #e2e8f0;
+      --text:   #1e293b;
+      --muted:  #64748b;
     }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       padding: 20px;
     }
 
-    .container {
-      width: 100%;
-      max-width: 700px;
-    }
-
-    /* ── SCREEN PANELS ── */
-    .screen {
-      display: none;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 24px;
-      padding: 40px 36px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-      animation: fadeIn 0.4s ease;
-    }
-
+    /* ── SCREENS ── */
+    .screen { display: none; }
     .screen.active { display: block; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── WELCOME SCREEN ── */
-    .welcome-icon {
-      font-size: 72px;
+    /* ── WELCOME ── */
+    #welcome {
+      max-width: 680px;
+      margin: 40px auto;
       text-align: center;
-      margin-bottom: 16px;
-      animation: bounce 1.5s infinite;
     }
 
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-10px); }
-    }
+    .logo { font-size: 72px; margin-bottom: 12px; }
 
-    h1 {
-      text-align: center;
-      color: #fff;
-      font-size: 2rem;
+    h1.title {
+      font-size: 2.4rem;
       font-weight: 800;
+      color: var(--blue);
       margin-bottom: 8px;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
     }
 
     .subtitle {
-      text-align: center;
-      color: #a0c4ff;
       font-size: 1.05rem;
+      color: var(--muted);
       margin-bottom: 32px;
     }
 
-    .info-cards {
+    .race-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 32px;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 36px;
     }
 
-    .info-card {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      padding: 16px 12px;
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+    .race-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px 16px;
+      border-left: 6px solid;
+      text-align: left;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
     }
 
-    .info-card .icon { font-size: 28px; margin-bottom: 6px; }
+    .race-card.r { border-color: var(--blue); }
+    .race-card.a { border-color: var(--green); }
+    .race-card.c { border-color: var(--yellow); }
+    .race-card.e { border-color: var(--purple); }
 
-    .info-card .label {
-      color: #cbd5e1;
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+    .race-letter {
+      font-size: 2rem;
+      font-weight: 900;
+      line-height: 1;
       margin-bottom: 4px;
     }
+    .race-card.r .race-letter { color: var(--blue); }
+    .race-card.a .race-letter { color: var(--green); }
+    .race-card.c .race-letter { color: var(--yellow); }
+    .race-card.e .race-letter { color: var(--purple); }
 
-    .info-card .value {
-      color: #fff;
-      font-weight: 700;
-      font-size: 1rem;
+    .race-word { font-weight: 700; font-size: 1rem; }
+    .race-desc { font-size: .88rem; color: var(--muted); margin-top: 4px; }
+
+    /* ── PRACTICE SCREEN ── */
+    #practice {
+      max-width: 900px;
+      margin: 20px auto;
     }
 
-    /* difficulty selector */
-    .difficulty-label {
-      color: #a0c4ff;
-      font-size: 0.9rem;
-      text-align: center;
-      margin-bottom: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .difficulty-selector {
+    .top-bar {
       display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 28px;
-    }
-
-    .diff-btn {
-      padding: 8px 22px;
-      border-radius: 50px;
-      border: 2px solid rgba(255,255,255,0.2);
-      background: transparent;
-      color: #cbd5e1;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .diff-btn:hover { border-color: #60a5fa; color: #fff; }
-
-    .diff-btn.selected {
-      background: linear-gradient(135deg, #3b82f6, #6366f1);
-      border-color: transparent;
-      color: #fff;
-      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
-    }
-
-    /* ── BUTTONS ── */
-    .btn-primary {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #f59e0b, #ef4444);
-      color: #fff;
-      border: none;
-      border-radius: 14px;
-      font-size: 1.15rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35);
-      letter-spacing: 0.03em;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(239, 68, 68, 0.45);
-    }
-
-    .btn-primary:active { transform: translateY(0); }
-
-    /* ── QUIZ SCREEN ── */
-    .quiz-header {
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .progress-info {
-      color: #a0c4ff;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    .score-badge {
-      background: linear-gradient(135deg, #f59e0b, #ef4444);
-      color: #fff;
-      padding: 6px 16px;
-      border-radius: 50px;
-      font-weight: 700;
-      font-size: 0.9rem;
+    .progress-label {
+      font-size: .9rem;
+      color: var(--muted);
     }
 
     .progress-bar-wrap {
-      background: rgba(255,255,255,0.1);
-      border-radius: 50px;
+      flex: 1;
+      max-width: 220px;
       height: 8px;
-      margin-bottom: 28px;
+      background: var(--border);
+      border-radius: 99px;
       overflow: hidden;
     }
 
-    .progress-bar {
+    .progress-bar-fill {
       height: 100%;
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      border-radius: 50px;
-      transition: width 0.4s ease;
+      background: var(--blue);
+      border-radius: 99px;
+      transition: width .4s;
     }
 
-    .question-category {
-      display: inline-block;
-      background: rgba(99, 102, 241, 0.25);
-      color: #a5b4fc;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 4px 14px;
-      border-radius: 50px;
-      margin-bottom: 12px;
-    }
-
-    .question-text {
-      color: #fff;
-      font-size: 1.3rem;
-      font-weight: 700;
-      line-height: 1.5;
-      margin-bottom: 28px;
-      min-height: 60px;
-    }
-
-    .question-flag {
-      font-size: 56px;
-      text-align: center;
-      margin-bottom: 12px;
-    }
-
-    .answers-grid {
+    .layout {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 20px;
     }
 
-    .answer-btn {
-      background: rgba(255, 255, 255, 0.07);
-      border: 2px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
-      padding: 16px 14px;
-      color: #e2e8f0;
+    @media (max-width: 640px) {
+      .layout { grid-template-columns: 1fr; }
+      .race-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+
+    .passage-text {
+      font-size: .97rem;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    .question-box {
+      background: #eff6ff;
+      border-left: 4px solid var(--blue);
+      border-radius: 8px;
+      padding: 14px 16px;
       font-size: 1rem;
       font-weight: 600;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.2s;
-      line-height: 1.3;
+      color: var(--blue);
+      margin-top: 18px;
     }
 
-    .answer-btn:hover:not(:disabled) {
-      background: rgba(99, 102, 241, 0.25);
-      border-color: #6366f1;
-      color: #fff;
-      transform: translateY(-2px);
+    /* RACE form */
+    .race-section {
+      margin-bottom: 20px;
     }
 
-    .answer-btn.correct {
-      background: rgba(34, 197, 94, 0.25) !important;
-      border-color: #22c55e !important;
-      color: #86efac !important;
-      animation: pulse-green 0.4s ease;
-    }
-
-    .answer-btn.wrong {
-      background: rgba(239, 68, 68, 0.25) !important;
-      border-color: #ef4444 !important;
-      color: #fca5a5 !important;
-      animation: shake 0.4s ease;
-    }
-
-    @keyframes pulse-green {
-      0%   { transform: scale(1); }
-      50%  { transform: scale(1.04); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25%       { transform: translateX(-6px); }
-      75%       { transform: translateX(6px); }
-    }
-
-    .answer-btn:disabled { cursor: default; }
-
-    /* feedback bar */
-    .feedback-bar {
-      margin-top: 20px;
-      padding: 14px 20px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 1rem;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.3s;
-      min-height: 50px;
-    }
-
-    .feedback-bar.show { opacity: 1; }
-
-    .feedback-bar.correct-fb {
-      background: rgba(34, 197, 94, 0.18);
-      color: #86efac;
-      border: 1px solid rgba(34, 197, 94, 0.3);
-    }
-
-    .feedback-bar.wrong-fb {
-      background: rgba(239, 68, 68, 0.18);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    /* ── RESULTS SCREEN ── */
-    .results-icon {
-      font-size: 80px;
-      text-align: center;
-      margin-bottom: 12px;
-    }
-
-    .results-title {
-      text-align: center;
-      color: #fff;
-      font-size: 1.9rem;
-      font-weight: 800;
+    .race-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       margin-bottom: 6px;
     }
 
-    .results-subtitle {
-      text-align: center;
-      color: #a0c4ff;
-      margin-bottom: 28px;
-      font-size: 1rem;
-    }
-
-    .score-circle {
-      width: 140px;
-      height: 140px;
+    .badge {
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 28px;
-      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.45);
-    }
-
-    .score-circle .big-num {
-      color: #fff;
-      font-size: 2.4rem;
       font-weight: 900;
-      line-height: 1;
+      font-size: 1rem;
+      color: #fff;
+      flex-shrink: 0;
     }
 
-    .score-circle .out-of {
-      color: rgba(255,255,255,0.7);
-      font-size: 0.85rem;
+    .badge.r { background: var(--blue); }
+    .badge.a { background: var(--green); }
+    .badge.c { background: var(--yellow); }
+    .badge.e { background: var(--purple); }
+
+    .section-title { font-weight: 700; font-size: .95rem; }
+    .section-hint  { font-size: .82rem; color: var(--muted); margin-bottom: 6px; }
+
+    textarea {
+      width: 100%;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: .95rem;
+      resize: vertical;
+      min-height: 80px;
+      transition: border-color .2s;
+      color: var(--text);
     }
 
-    .stats-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 28px;
+    textarea:focus {
+      outline: none;
+      border-color: var(--blue);
     }
 
-    .stat-box {
-      background: rgba(255,255,255,0.07);
-      border-radius: 14px;
-      padding: 16px 10px;
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.1);
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: transform .1s, opacity .2s;
     }
 
-    .stat-box .s-icon { font-size: 24px; margin-bottom: 6px; }
-    .stat-box .s-label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-    .stat-box .s-value { color: #fff; font-weight: 800; font-size: 1.15rem; }
+    .btn:active { transform: scale(.97); }
+    .btn:disabled { opacity: .5; cursor: default; }
 
-    .rank-badge {
-      text-align: center;
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 24px;
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
     }
 
-    .rank-badge .rank-title { color: #fcd34d; font-weight: 700; font-size: 1.1rem; margin-bottom: 4px; }
-    .rank-badge .rank-desc  { color: #94a3b8; font-size: 0.88rem; }
+    .btn-success {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--border);
+      color: var(--text);
+    }
 
     .btn-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
       gap: 12px;
+      justify-content: flex-end;
+      margin-top: 20px;
+      flex-wrap: wrap;
     }
 
-    .btn-secondary {
-      padding: 14px;
-      background: rgba(255,255,255,0.08);
-      border: 2px solid rgba(255,255,255,0.15);
-      border-radius: 14px;
-      color: #e2e8f0;
-      font-size: 1rem;
+    /* ── RESULTS ── */
+    #results {
+      max-width: 760px;
+      margin: 30px auto;
+    }
+
+    .score-hero {
+      text-align: center;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 36px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    }
+
+    .score-emoji { font-size: 56px; margin-bottom: 8px; }
+    .score-number { font-size: 3rem; font-weight: 900; color: var(--blue); }
+    .score-denom  { font-size: 1.4rem; color: var(--muted); }
+    .score-msg    { margin-top: 8px; font-size: 1.05rem; color: var(--muted); }
+
+    .feedback-section {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px 22px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+      border-left: 6px solid;
+    }
+
+    .feedback-section.r { border-color: var(--blue); }
+    .feedback-section.a { border-color: var(--green); }
+    .feedback-section.c { border-color: var(--yellow); }
+    .feedback-section.e { border-color: var(--purple); }
+
+    .fb-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .fb-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
+      font-size: 1rem;
     }
 
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.14);
-      border-color: rgba(255,255,255,0.3);
+    .stars { font-size: 1.3rem; letter-spacing: 2px; }
+
+    .fb-student-answer {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: .93rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-style: italic;
+      line-height: 1.6;
     }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 500px) {
-      .screen { padding: 28px 20px; }
-      h1 { font-size: 1.6rem; }
-      .answers-grid { grid-template-columns: 1fr; }
-      .info-cards { grid-template-columns: 1fr; }
-      .stats-row  { grid-template-columns: 1fr; }
-      .btn-row    { grid-template-columns: 1fr; }
+    .fb-comment {
+      font-size: .93rem;
+      line-height: 1.6;
+    }
+
+    .tip-box {
+      background: #fef9c3;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: .88rem;
+      color: #713f12;
+      margin-top: 8px;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    /* ── MISC ── */
+    .tag {
+      display: inline-block;
+      background: #dbeafe;
+      color: var(--blue);
+      font-size: .78rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 99px;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-<!-- fixed mute button – always visible -->
-<button class="mute-btn" onclick="toggleMute()" title="Toggle sound"
-  style="position:fixed;top:16px;right:16px;z-index:999;background:rgba(255,255,255,0.1);
-         border:1px solid rgba(255,255,255,0.2);border-radius:50%;width:42px;height:42px;
-         font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-         backdrop-filter:blur(8px);transition:background 0.2s;">🔊</button>
 
-<div class="container">
+<!-- ══════════════ WELCOME ══════════════ -->
+<div id="welcome" class="screen active">
+  <div class="logo">✏️</div>
+  <h1 class="title">RACE Method Practice</h1>
+  <p class="subtitle">Read a passage, answer a question using the RACE method, and get instant feedback!</p>
 
-  <!-- ══ WELCOME SCREEN ══ -->
-  <div id="screen-welcome" class="screen active">
-    <div class="welcome-icon">🌍</div>
-    <h1>Countries &amp; Capitals</h1>
-    <p class="subtitle">Test your world geography knowledge!</p>
-
-    <div class="info-cards">
-      <div class="info-card">
-        <div class="icon">❓</div>
-        <div class="label">Questions</div>
-        <div class="value" id="q-count-display">15</div>
-      </div>
-      <div class="info-card">
-        <div class="icon">🎯</div>
-        <div class="label">Format</div>
-        <div class="value">4 Choices</div>
-      </div>
-      <div class="info-card">
-        <div class="icon">🏆</div>
-        <div class="label">Mode</div>
-        <div class="value">Single Player</div>
-      </div>
+  <div class="race-grid">
+    <div class="race-card r">
+      <div class="race-letter">R</div>
+      <div class="race-word">Restate the Question</div>
+      <div class="race-desc">Turn the question into a statement that starts your answer.</div>
     </div>
-
-    <div class="difficulty-label">Choose Difficulty</div>
-    <div class="difficulty-selector">
-      <button class="diff-btn selected" data-diff="easy">Easy</button>
-      <button class="diff-btn" data-diff="medium">Medium</button>
-      <button class="diff-btn" data-diff="hard">Hard</button>
+    <div class="race-card a">
+      <div class="race-letter">A</div>
+      <div class="race-word">Answer the Question</div>
+      <div class="race-desc">Give a clear, direct answer to the question.</div>
     </div>
-
-    <button class="btn-primary" id="btn-start">🚀 Start Quiz!</button>
+    <div class="race-card c">
+      <div class="race-letter">C</div>
+      <div class="race-word">Cite Evidence</div>
+      <div class="race-desc">Use words or details from the passage to support your answer.</div>
+    </div>
+    <div class="race-card e">
+      <div class="race-letter">E</div>
+      <div class="race-word">Explain / Extend</div>
+      <div class="race-desc">Explain how your evidence connects to your answer.</div>
+    </div>
   </div>
 
-  <!-- ══ QUIZ SCREEN ══ -->
-  <div id="screen-quiz" class="screen">
-    <div class="quiz-header">
-      <span class="progress-info" id="progress-info">Question 1 of 15</span>
-      <span class="score-badge" id="score-display">Score: 0</span>
+  <button class="btn btn-primary" onclick="startPractice()">Start Practising →</button>
+</div>
+
+<!-- ══════════════ PRACTICE ══════════════ -->
+<div id="practice" class="screen">
+  <div class="top-bar">
+    <div>
+      <div style="font-weight:700;font-size:1.1rem" id="passage-title"></div>
+      <div class="progress-label" id="passage-counter"></div>
     </div>
     <div class="progress-bar-wrap">
-      <div class="progress-bar" id="progress-bar" style="width:0%"></div>
-    </div>
-
-    <div class="question-flag" id="question-flag"></div>
-    <div class="question-category" id="question-category">Capital City</div>
-    <div class="question-text" id="question-text"></div>
-
-    <div class="answers-grid" id="answers-grid"></div>
-
-    <div class="feedback-bar" id="feedback-bar"></div>
-  </div>
-
-  <!-- ══ RESULTS SCREEN ══ -->
-  <div id="screen-results" class="screen">
-    <div class="results-icon" id="results-icon">🎉</div>
-    <div class="results-title" id="results-title">Fantastic!</div>
-    <div class="results-subtitle" id="results-subtitle">You really know your capitals!</div>
-
-    <div class="score-circle">
-      <div class="big-num" id="final-score">0</div>
-      <div class="out-of" id="final-out-of">out of 15</div>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat-box">
-        <div class="s-icon">✅</div>
-        <div class="s-label">Correct</div>
-        <div class="s-value" id="stat-correct">0</div>
-      </div>
-      <div class="stat-box">
-        <div class="s-icon">❌</div>
-        <div class="s-label">Wrong</div>
-        <div class="s-value" id="stat-wrong">0</div>
-      </div>
-      <div class="stat-box">
-        <div class="s-icon">📊</div>
-        <div class="s-label">Accuracy</div>
-        <div class="s-value" id="stat-accuracy">0%</div>
-      </div>
-    </div>
-
-    <div class="rank-badge">
-      <div class="rank-title" id="rank-title">🌟 World Explorer</div>
-      <div class="rank-desc" id="rank-desc">Keep learning about our amazing world!</div>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn-secondary" id="btn-same-diff">Play Again</button>
-      <button class="btn-primary" id="btn-menu">Main Menu</button>
+      <div class="progress-bar-fill" id="progress-fill"></div>
     </div>
   </div>
 
+  <div class="layout">
+    <!-- Left: passage + question -->
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <h2>Reading Passage</h2>
+        <p class="passage-text" id="passage-body"></p>
+      </div>
+      <div class="question-box" id="question-text"></div>
+    </div>
+
+    <!-- Right: RACE form -->
+    <div class="card">
+      <h2>Your RACE Response</h2>
+
+      <div class="race-section">
+        <div class="race-label">
+          <span class="badge r">R</span>
+          <span class="section-title">Restate the Question</span>
+        </div>
+        <p class="section-hint">Begin with "One way…", "There are several…", or turn the question into a sentence.</p>
+        <textarea id="ans-r" placeholder="Restate the question in your own words…" rows="3"></textarea>
+      </div>
+
+      <div class="race-section">
+        <div class="race-label">
+          <span class="badge a">A</span>
+          <span class="section-title">Answer the Question</span>
+        </div>
+        <p class="section-hint">Give your direct answer clearly and completely.</p>
+        <textarea id="ans-a" placeholder="My direct answer is…" rows="3"></textarea>
+      </div>
+
+      <div class="race-section">
+        <div class="race-label">
+          <span class="badge c">C</span>
+          <span class="section-title">Cite Evidence</span>
+        </div>
+        <p class="section-hint">Use "According to the text…", "The passage states…", or "For example…"</p>
+        <textarea id="ans-c" placeholder="According to the text / passage…" rows="3"></textarea>
+      </div>
+
+      <div class="race-section">
+        <div class="race-label">
+          <span class="badge e">E</span>
+          <span class="section-title">Explain / Extend</span>
+        </div>
+        <p class="section-hint">Use "This shows…", "This means…", or "This is important because…"</p>
+        <textarea id="ans-e" placeholder="This shows / means that…" rows="3"></textarea>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="showWelcome()">← Back</button>
+        <button class="btn btn-success" onclick="submitAnswer()">Submit Answer ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ RESULTS ══════════════ -->
+<div id="results" class="screen">
+  <div class="score-hero">
+    <div class="score-emoji" id="score-emoji"></div>
+    <div>
+      <span class="score-number" id="score-num"></span>
+      <span class="score-denom"> / 12</span>
+    </div>
+    <div class="score-msg" id="score-msg"></div>
+  </div>
+
+  <div id="feedback-r" class="feedback-section r"></div>
+  <div id="feedback-a" class="feedback-section a"></div>
+  <div id="feedback-c" class="feedback-section c"></div>
+  <div id="feedback-e" class="feedback-section e"></div>
+
+  <div class="result-actions">
+    <button class="btn btn-outline" onclick="showWelcome()">🏠 Home</button>
+    <button class="btn btn-primary" id="next-btn" onclick="nextPassage()">Next Passage →</button>
+  </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-//  QUESTION DATA
-// ══════════════════════════════════════════════
-const ALL_QUESTIONS = [
-  // ═══ EASY – very well-known world capitals ════════════════════════════════
-  { flag:"🇫🇷", q:"What is the capital of France?",                    a:"Paris",               wrong:["Lyon","Marseille","Bordeaux"],                 cat:"Capital City", diff:"easy" },
-  { flag:"🇯🇵", q:"What is the capital of Japan?",                     a:"Tokyo",               wrong:["Osaka","Kyoto","Hiroshima"],                   cat:"Capital City", diff:"easy" },
-  { flag:"🇦🇺", q:"What is the capital of Australia?",                 a:"Canberra",            wrong:["Sydney","Melbourne","Brisbane"],               cat:"Capital City", diff:"easy" },
-  { flag:"🇧🇷", q:"What is the capital of Brazil?",                    a:"Brasília",            wrong:["Rio de Janeiro","São Paulo","Salvador"],        cat:"Capital City", diff:"easy" },
-  { flag:"🇩🇪", q:"What is the capital of Germany?",                   a:"Berlin",              wrong:["Munich","Hamburg","Frankfurt"],                 cat:"Capital City", diff:"easy" },
-  { flag:"🇨🇦", q:"What is the capital of Canada?",                    a:"Ottawa",              wrong:["Toronto","Vancouver","Montreal"],               cat:"Capital City", diff:"easy" },
-  { flag:"🇮🇹", q:"What is the capital of Italy?",                     a:"Rome",                wrong:["Milan","Naples","Venice"],                     cat:"Capital City", diff:"easy" },
-  { flag:"🇷🇺", q:"What is the capital of Russia?",                    a:"Moscow",              wrong:["St. Petersburg","Novosibirsk","Vladivostok"],   cat:"Capital City", diff:"easy" },
-  { flag:"🇨🇳", q:"What is the capital of China?",                     a:"Beijing",             wrong:["Shanghai","Guangzhou","Chongqing"],             cat:"Capital City", diff:"easy" },
-  { flag:"🇺🇸", q:"What is the capital of the United States?",         a:"Washington D.C.",     wrong:["New York","Los Angeles","Chicago"],             cat:"Capital City", diff:"easy" },
-  { flag:"🇬🇧", q:"What is the capital of the United Kingdom?",        a:"London",              wrong:["Manchester","Birmingham","Glasgow"],            cat:"Capital City", diff:"easy" },
-  { flag:"🇪🇸", q:"What is the capital of Spain?",                     a:"Madrid",              wrong:["Barcelona","Seville","Valencia"],               cat:"Capital City", diff:"easy" },
-  { flag:"🇰🇷", q:"What is the capital of South Korea?",               a:"Seoul",               wrong:["Busan","Incheon","Daegu"],                     cat:"Capital City", diff:"easy" },
-  { flag:"🇳🇱", q:"What is the capital of the Netherlands?",           a:"Amsterdam",           wrong:["Rotterdam","The Hague","Utrecht"],              cat:"Capital City", diff:"easy" },
-  { flag:"🇨🇭", q:"What is the capital of Switzerland?",               a:"Bern",                wrong:["Zurich","Geneva","Basel"],                     cat:"Capital City", diff:"easy" },
-  { flag:"🇦🇹", q:"What is the capital of Austria?",                   a:"Vienna",              wrong:["Salzburg","Graz","Innsbruck"],                  cat:"Capital City", diff:"easy" },
-  { flag:"🇵🇱", q:"What is the capital of Poland?",                    a:"Warsaw",              wrong:["Kraków","Łódź","Wrocław"],                      cat:"Capital City", diff:"easy" },
-  { flag:"🇸🇪", q:"What is the capital of Sweden?",                    a:"Stockholm",           wrong:["Gothenburg","Malmö","Uppsala"],                 cat:"Capital City", diff:"easy" },
-  { flag:"🇳🇴", q:"What is the capital of Norway?",                    a:"Oslo",                wrong:["Bergen","Trondheim","Stavanger"],               cat:"Capital City", diff:"easy" },
-  { flag:"🇩🇰", q:"What is the capital of Denmark?",                   a:"Copenhagen",          wrong:["Aarhus","Odense","Aalborg"],                    cat:"Capital City", diff:"easy" },
-  { flag:"🇫🇮", q:"What is the capital of Finland?",                   a:"Helsinki",            wrong:["Tampere","Turku","Espoo"],                      cat:"Capital City", diff:"easy" },
-  { flag:"🇮🇪", q:"What is the capital of Ireland?",                   a:"Dublin",              wrong:["Cork","Galway","Limerick"],                     cat:"Capital City", diff:"easy" },
-  { flag:"🇧🇪", q:"What is the capital of Belgium?",                   a:"Brussels",            wrong:["Antwerp","Ghent","Bruges"],                     cat:"Capital City", diff:"easy" },
-  { flag:"🇵🇹", q:"What is the capital of Portugal?",                  a:"Lisbon",              wrong:["Porto","Braga","Coimbra"],                      cat:"Capital City", diff:"easy" },
-  { flag:"🇬🇷", q:"What is the capital of Greece?",                    a:"Athens",              wrong:["Thessaloniki","Patras","Heraklion"],             cat:"Capital City", diff:"easy" },
-  // Easy "Which Country"
-  { flag:"🗺️",  q:"Paris is the capital of which country?",            a:"France",              wrong:["Belgium","Switzerland","Italy"],                cat:"Which Country", diff:"easy" },
-  { flag:"🗺️",  q:"Tokyo is the capital of which country?",            a:"Japan",               wrong:["China","South Korea","Vietnam"],                cat:"Which Country", diff:"easy" },
-  { flag:"🗺️",  q:"Rome is the capital of which country?",             a:"Italy",               wrong:["Spain","Portugal","Greece"],                   cat:"Which Country", diff:"easy" },
-  { flag:"🗺️",  q:"London is the capital of which country?",           a:"United Kingdom",      wrong:["Ireland","Australia","Canada"],                 cat:"Which Country", diff:"easy" },
-  { flag:"🗺️",  q:"Berlin is the capital of which country?",           a:"Germany",             wrong:["Austria","Switzerland","Poland"],               cat:"Which Country", diff:"easy" },
+  /* ══════════════ DATA ══════════════ */
+  const passages = [
+    {
+      title: "The Arctic Fox",
+      tag: "Science & Nature",
+      body: `The Arctic fox is one of nature's most remarkable animals. These small foxes live in some of the coldest places on Earth, including northern Canada and the Arctic tundra. Their thick, white fur helps them blend into the snowy landscape and keeps them warm in temperatures as low as −50°C. In summer, their fur changes to brown or grey, helping them hide among rocks and plants. Arctic foxes are omnivores, meaning they eat both plants and animals. They hunt lemmings, birds, and fish, and also eat berries and seaweed when food is scarce. During harsh winters, they often follow polar bears to eat the leftover scraps from their meals.`,
+      question: "How does the Arctic fox survive in extremely cold and changing climates?",
+      keyWords: ["arctic fox", "survive", "cold", "climate", "fur", "temperature"],
+      evidenceWords: ["thick", "white fur", "blend", "−50", "omnivore", "lemmings", "brown", "grey", "polar bear"],
+    },
+    {
+      title: "Terry Fox",
+      tag: "Canadian History",
+      body: `Terry Fox was born on July 28, 1958, in Winnipeg, Manitoba, Canada. When he was 18 years old, Terry was diagnosed with bone cancer in his right leg, and doctors had to amputate it. Determined not to let cancer defeat him, Terry decided to run across Canada to raise money and awareness for cancer research. He called his journey the "Marathon of Hope." Terry began his run in St. John's, Newfoundland on April 12, 1980. Running on an artificial leg, he completed about 42 kilometres every day. After 143 days and 5,373 kilometres, Terry had to stop near Thunder Bay, Ontario, because his cancer had spread to his lungs. He passed away on June 28, 1981, but his legacy lives on. The Terry Fox Run, held every year in September, has raised over $850 million for cancer research.`,
+      question: "Why is Terry Fox considered a Canadian hero?",
+      keyWords: ["terry fox", "hero", "canadian", "cancer", "marathon", "hope"],
+      evidenceWords: ["amputate", "artificial leg", "42 kilometre", "5,373", "143 day", "850 million", "marathon of hope"],
+    },
+    {
+      title: "Photosynthesis",
+      tag: "Science",
+      body: `Plants are amazing living things that can make their own food through a process called photosynthesis. During photosynthesis, plants use three things: sunlight, water, and carbon dioxide (a gas in the air). The green parts of the plant, especially the leaves, contain a special substance called chlorophyll, which captures energy from sunlight. The plant uses this energy to turn water and carbon dioxide into glucose (a type of sugar) and oxygen. The glucose gives the plant the energy it needs to grow, while the oxygen is released into the air. This is why plants are so important for all life on Earth — they produce the oxygen that humans and animals need to breathe.`,
+      question: "Why is photosynthesis important for all living things on Earth?",
+      keyWords: ["photosynthesis", "important", "living", "earth", "plants"],
+      evidenceWords: ["chlorophyll", "sunlight", "oxygen", "carbon dioxide", "glucose", "sugar", "breathe"],
+    },
+    {
+      title: "The Great Barrier Reef",
+      tag: "Geography",
+      body: `The Great Barrier Reef, located off the coast of Queensland, Australia, is the world's largest coral reef system. It stretches over 2,300 kilometres and can even be seen from space. The reef is home to an incredible variety of life, including over 1,500 species of fish, 4,000 types of molluscs, and more than 200 species of birds. Coral reefs are built by tiny animals called coral polyps, which create hard limestone skeletons over thousands of years. Sadly, the Great Barrier Reef is in danger. Rising ocean temperatures caused by climate change lead to "coral bleaching," where the coral loses its colour and eventually dies. Scientists and governments around the world are working together to find ways to protect this natural wonder.`,
+      question: "What threats does the Great Barrier Reef face, and why is it important to protect it?",
+      keyWords: ["great barrier reef", "threat", "danger", "protect", "important"],
+      evidenceWords: ["bleaching", "climate change", "ocean temperature", "coral polyp", "1,500", "limestone", "species"],
+    },
+    {
+      title: "Ancient Egypt",
+      tag: "Social Studies",
+      body: `Ancient Egypt was one of the world's greatest civilizations, lasting for over 3,000 years along the Nile River in northeastern Africa. The Nile River was essential to Egyptian life — it provided water for drinking and farming, and its yearly floods deposited rich soil along the riverbanks, making the land very fertile. The ancient Egyptians built enormous structures called pyramids as tombs for their pharaohs (kings). The Great Pyramid of Giza, built around 2560 BCE, is one of the Seven Wonders of the Ancient World and still stands today. Ancient Egyptians also developed one of the earliest writing systems, called hieroglyphics, which used pictures and symbols to represent words and sounds.`,
+      question: "How did the Nile River shape the development of ancient Egyptian civilization?",
+      keyWords: ["nile river", "egypt", "civilization", "development", "shaped"],
+      evidenceWords: ["fertile", "flood", "soil", "water", "farming", "3,000 year", "riverbank"],
+    },
+  ];
 
-  // ═══ MEDIUM – widely known but sometimes tricky ═══════════════════════════
-  { flag:"🇲🇽", q:"What is the capital of Mexico?",                    a:"Mexico City",         wrong:["Guadalajara","Monterrey","Cancún"],             cat:"Capital City", diff:"medium" },
-  { flag:"🇿🇦", q:"What is the capital of South Africa?",              a:"Pretoria",            wrong:["Cape Town","Johannesburg","Durban"],            cat:"Capital City", diff:"medium" },
-  { flag:"🇮🇳", q:"What is the capital of India?",                     a:"New Delhi",           wrong:["Mumbai","Kolkata","Bangalore"],                 cat:"Capital City", diff:"medium" },
-  { flag:"🇪🇬", q:"What is the capital of Egypt?",                     a:"Cairo",               wrong:["Alexandria","Luxor","Aswan"],                   cat:"Capital City", diff:"medium" },
-  { flag:"🇰🇪", q:"What is the capital of Kenya?",                     a:"Nairobi",             wrong:["Mombasa","Kisumu","Nakuru"],                    cat:"Capital City", diff:"medium" },
-  { flag:"🇦🇷", q:"What is the capital of Argentina?",                 a:"Buenos Aires",        wrong:["Córdoba","Rosario","Mendoza"],                  cat:"Capital City", diff:"medium" },
-  { flag:"🇹🇭", q:"What is the capital of Thailand?",                  a:"Bangkok",             wrong:["Chiang Mai","Phuket","Pattaya"],                cat:"Capital City", diff:"medium" },
-  { flag:"🇵🇪", q:"What is the capital of Peru?",                      a:"Lima",                wrong:["Cusco","Arequipa","Trujillo"],                  cat:"Capital City", diff:"medium" },
-  { flag:"🇳🇬", q:"What is the capital of Nigeria?",                   a:"Abuja",               wrong:["Lagos","Kano","Ibadan"],                        cat:"Capital City", diff:"medium" },
-  { flag:"🇵🇰", q:"What is the capital of Pakistan?",                  a:"Islamabad",           wrong:["Karachi","Lahore","Peshawar"],                  cat:"Capital City", diff:"medium" },
-  { flag:"🇸🇦", q:"What is the capital of Saudi Arabia?",              a:"Riyadh",              wrong:["Jeddah","Mecca","Medina"],                      cat:"Capital City", diff:"medium" },
-  { flag:"🇹🇷", q:"What is the capital of Turkey?",                    a:"Ankara",              wrong:["Istanbul","Izmir","Bursa"],                     cat:"Capital City", diff:"medium" },
-  { flag:"🇲🇾", q:"What is the capital of Malaysia?",                  a:"Kuala Lumpur",        wrong:["Penang","Johor Bahru","Kota Kinabalu"],         cat:"Capital City", diff:"medium" },
-  { flag:"🇮🇷", q:"What is the capital of Iran?",                      a:"Tehran",              wrong:["Isfahan","Shiraz","Mashhad"],                   cat:"Capital City", diff:"medium" },
-  { flag:"🇮🇶", q:"What is the capital of Iraq?",                      a:"Baghdad",             wrong:["Basra","Mosul","Erbil"],                        cat:"Capital City", diff:"medium" },
-  { flag:"🇮🇱", q:"What is the capital of Israel?",                    a:"Jerusalem",           wrong:["Tel Aviv","Haifa","Nazareth"],                  cat:"Capital City", diff:"medium" },
-  { flag:"🇨🇺", q:"What is the capital of Cuba?",                      a:"Havana",              wrong:["Santiago de Cuba","Camagüey","Holguín"],        cat:"Capital City", diff:"medium" },
-  { flag:"🇻🇪", q:"What is the capital of Venezuela?",                 a:"Caracas",             wrong:["Maracaibo","Valencia","Barquisimeto"],          cat:"Capital City", diff:"medium" },
-  { flag:"🇧🇩", q:"What is the capital of Bangladesh?",                a:"Dhaka",               wrong:["Chittagong","Khulna","Sylhet"],                 cat:"Capital City", diff:"medium" },
-  { flag:"🇪🇹", q:"What is the capital of Ethiopia?",                  a:"Addis Ababa",         wrong:["Dire Dawa","Mekelle","Gondar"],                 cat:"Capital City", diff:"medium" },
-  { flag:"🇹🇿", q:"What is the capital of Tanzania?",                  a:"Dodoma",              wrong:["Dar es Salaam","Mwanza","Arusha"],              cat:"Capital City", diff:"medium" },
-  { flag:"🇬🇭", q:"What is the capital of Ghana?",                     a:"Accra",               wrong:["Kumasi","Tamale","Sekondi"],                    cat:"Capital City", diff:"medium" },
-  { flag:"🇿🇼", q:"What is the capital of Zimbabwe?",                  a:"Harare",              wrong:["Bulawayo","Mutare","Gweru"],                    cat:"Capital City", diff:"medium" },
-  { flag:"🇩🇿", q:"What is the capital of Algeria?",                   a:"Algiers",             wrong:["Oran","Constantine","Annaba"],                  cat:"Capital City", diff:"medium" },
-  { flag:"🇱🇾", q:"What is the capital of Libya?",                     a:"Tripoli",             wrong:["Benghazi","Misrata","Sabha"],                   cat:"Capital City", diff:"medium" },
-  { flag:"🇹🇳", q:"What is the capital of Tunisia?",                   a:"Tunis",               wrong:["Sfax","Sousse","Kairouan"],                     cat:"Capital City", diff:"medium" },
-  { flag:"🇸🇩", q:"What is the capital of Sudan?",                     a:"Khartoum",            wrong:["Omdurman","Port Sudan","Kassala"],              cat:"Capital City", diff:"medium" },
-  { flag:"🇨🇿", q:"What is the capital of Czech Republic?",            a:"Prague",              wrong:["Brno","Ostrava","Plzeň"],                       cat:"Capital City", diff:"medium" },
-  { flag:"🇭🇺", q:"What is the capital of Hungary?",                   a:"Budapest",            wrong:["Debrecen","Miskolc","Pécs"],                    cat:"Capital City", diff:"medium" },
-  { flag:"🇷🇴", q:"What is the capital of Romania?",                   a:"Bucharest",           wrong:["Cluj-Napoca","Timișoara","Iași"],               cat:"Capital City", diff:"medium" },
-  { flag:"🇲🇦", q:"What is the capital of Morocco?",                   a:"Rabat",               wrong:["Casablanca","Marrakesh","Fez"],                 cat:"Capital City", diff:"medium" },
-  { flag:"🇮🇩", q:"What is the capital of Indonesia?",                 a:"Jakarta",             wrong:["Surabaya","Bandung","Bali"],                    cat:"Capital City", diff:"medium" },
-  { flag:"🇵🇭", q:"What is the capital of the Philippines?",           a:"Manila",              wrong:["Cebu","Davao","Quezon City"],                   cat:"Capital City", diff:"medium" },
-  { flag:"🇻🇳", q:"What is the capital of Vietnam?",                   a:"Hanoi",               wrong:["Ho Chi Minh City","Da Nang","Hue"],             cat:"Capital City", diff:"medium" },
-  { flag:"🇳🇿", q:"What is the capital of New Zealand?",               a:"Wellington",          wrong:["Auckland","Christchurch","Hamilton"],           cat:"Capital City", diff:"medium" },
-  { flag:"🇦🇪", q:"What is the capital of the United Arab Emirates?",  a:"Abu Dhabi",           wrong:["Dubai","Sharjah","Ajman"],                      cat:"Capital City", diff:"medium" },
-  { flag:"🇶🇦", q:"What is the capital of Qatar?",                     a:"Doha",                wrong:["Al Wakrah","Al Khor","Mesaieed"],               cat:"Capital City", diff:"medium" },
-  { flag:"🇯🇴", q:"What is the capital of Jordan?",                    a:"Amman",               wrong:["Zarqa","Irbid","Aqaba"],                        cat:"Capital City", diff:"medium" },
-  { flag:"🇸🇬", q:"What is the capital of Singapore?",                 a:"Singapore",           wrong:["Kuala Lumpur","Jakarta","Manila"],              cat:"Capital City", diff:"medium" },
-  { flag:"🇨🇱", q:"What is the capital of Chile?",                     a:"Santiago",            wrong:["Valparaíso","Concepción","Antofagasta"],        cat:"Capital City", diff:"medium" },
-  { flag:"🇨🇴", q:"What is the capital of Colombia?",                  a:"Bogotá",              wrong:["Medellín","Cali","Barranquilla"],               cat:"Capital City", diff:"medium" },
-  { flag:"🇺🇦", q:"What is the capital of Ukraine?",                   a:"Kyiv",                wrong:["Kharkiv","Odesa","Lviv"],                       cat:"Capital City", diff:"medium" },
-  { flag:"🇰🇼", q:"What is the capital of Kuwait?",                    a:"Kuwait City",         wrong:["Ahmadi","Hawalli","Jahra"],                     cat:"Capital City", diff:"medium" },
-  { flag:"🇱🇧", q:"What is the capital of Lebanon?",                   a:"Beirut",              wrong:["Tripoli","Sidon","Tyre"],                       cat:"Capital City", diff:"medium" },
-  { flag:"🇦🇫", q:"What is the capital of Afghanistan?",               a:"Kabul",               wrong:["Kandahar","Herat","Mazar-i-Sharif"],            cat:"Capital City", diff:"medium" },
-  { flag:"🇲🇲", q:"What is the capital of Myanmar?",                   a:"Naypyidaw",           wrong:["Yangon","Mandalay","Bago"],                     cat:"Capital City", diff:"medium" },
-  { flag:"🇳🇵", q:"What is the capital of Nepal?",                     a:"Kathmandu",           wrong:["Pokhara","Lalitpur","Bhaktapur"],               cat:"Capital City", diff:"medium" },
-  { flag:"🇧🇴", q:"What is the capital of Bolivia?",                   a:"Sucre",               wrong:["La Paz","Cochabamba","Santa Cruz"],             cat:"Capital City", diff:"medium" },
-  { flag:"🇪🇨", q:"What is the capital of Ecuador?",                   a:"Quito",               wrong:["Guayaquil","Cuenca","Manta"],                   cat:"Capital City", diff:"medium" },
-  { flag:"🇵🇾", q:"What is the capital of Paraguay?",                  a:"Asunción",            wrong:["Ciudad del Este","Encarnación","Luque"],        cat:"Capital City", diff:"medium" },
-  { flag:"🇺🇾", q:"What is the capital of Uruguay?",                   a:"Montevideo",          wrong:["Salto","Paysandú","Rivera"],                    cat:"Capital City", diff:"medium" },
-  { flag:"🇬🇹", q:"What is the capital of Guatemala?",                 a:"Guatemala City",      wrong:["Antigua","Quetzaltenango","Escuintla"],         cat:"Capital City", diff:"medium" },
-  { flag:"🇨🇷", q:"What is the capital of Costa Rica?",                a:"San José",            wrong:["Cartago","Heredia","Liberia"],                  cat:"Capital City", diff:"medium" },
-  { flag:"🇵🇦", q:"What is the capital of Panama?",                    a:"Panama City",         wrong:["Colón","Santiago","Chitré"],                    cat:"Capital City", diff:"medium" },
-  { flag:"🇯🇲", q:"What is the capital of Jamaica?",                   a:"Kingston",            wrong:["Montego Bay","Spanish Town","Portmore"],        cat:"Capital City", diff:"medium" },
-  { flag:"🇷🇸", q:"What is the capital of Serbia?",                    a:"Belgrade",            wrong:["Novi Sad","Niš","Kragujevac"],                  cat:"Capital City", diff:"medium" },
-  { flag:"🇭🇷", q:"What is the capital of Croatia?",                   a:"Zagreb",              wrong:["Split","Rijeka","Osijek"],                      cat:"Capital City", diff:"medium" },
-  { flag:"🇧🇬", q:"What is the capital of Bulgaria?",                  a:"Sofia",               wrong:["Plovdiv","Varna","Burgas"],                     cat:"Capital City", diff:"medium" },
-  // Medium "Which Country"
-  { flag:"🗺️",  q:"Nairobi is the capital of which country?",          a:"Kenya",               wrong:["Tanzania","Uganda","Ethiopia"],                 cat:"Which Country", diff:"medium" },
-  { flag:"🗺️",  q:"Buenos Aires is the capital of which country?",     a:"Argentina",           wrong:["Chile","Brazil","Uruguay"],                     cat:"Which Country", diff:"medium" },
-  { flag:"🗺️",  q:"Canberra is the capital of which country?",         a:"Australia",           wrong:["New Zealand","Canada","South Africa"],          cat:"Which Country", diff:"medium" },
-  { flag:"🗺️",  q:"Ankara is the capital of which country?",           a:"Turkey",              wrong:["Greece","Bulgaria","Syria"],                    cat:"Which Country", diff:"medium" },
-  { flag:"🗺️",  q:"New Delhi is the capital of which country?",        a:"India",               wrong:["Pakistan","Bangladesh","Nepal"],                cat:"Which Country", diff:"medium" },
+  /* ══════════════ STATE ══════════════ */
+  let currentIndex = 0;
 
-  // ═══ HARD – lesser-known or tricky capitals ═══════════════════════════════
-  { flag:"🇮🇸", q:"What is the capital of Iceland?",                   a:"Reykjavík",           wrong:["Akureyri","Keflavík","Selfoss"],                cat:"Capital City", diff:"hard" },
-  { flag:"🇱🇺", q:"What is the capital of Luxembourg?",                a:"Luxembourg City",     wrong:["Esch-sur-Alzette","Differdange","Dudelange"],   cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇹", q:"What is the capital of Malta?",                     a:"Valletta",            wrong:["Sliema","Birkirkara","Mosta"],                  cat:"Capital City", diff:"hard" },
-  { flag:"🇨🇾", q:"What is the capital of Cyprus?",                    a:"Nicosia",             wrong:["Limassol","Larnaca","Paphos"],                  cat:"Capital City", diff:"hard" },
-  { flag:"🇦🇱", q:"What is the capital of Albania?",                   a:"Tirana",              wrong:["Durrës","Vlorë","Shkodër"],                     cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇮", q:"What is the capital of Slovenia?",                  a:"Ljubljana",           wrong:["Maribor","Celje","Kranj"],                      cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇰", q:"What is the capital of Slovakia?",                  a:"Bratislava",          wrong:["Košice","Prešov","Žilina"],                     cat:"Capital City", diff:"hard" },
-  { flag:"🇧🇦", q:"What is the capital of Bosnia and Herzegovina?",    a:"Sarajevo",            wrong:["Banja Luka","Tuzla","Mostar"],                  cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇰", q:"What is the capital of North Macedonia?",           a:"Skopje",              wrong:["Bitola","Kumanovo","Ohrid"],                    cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇪", q:"What is the capital of Montenegro?",                a:"Podgorica",           wrong:["Nikšić","Bijelo Polje","Herceg Novi"],          cat:"Capital City", diff:"hard" },
-  { flag:"🇧🇾", q:"What is the capital of Belarus?",                   a:"Minsk",               wrong:["Gomel","Brest","Vitebsk"],                      cat:"Capital City", diff:"hard" },
-  { flag:"🇪🇪", q:"What is the capital of Estonia?",                   a:"Tallinn",             wrong:["Tartu","Narva","Pärnu"],                        cat:"Capital City", diff:"hard" },
-  { flag:"🇱🇻", q:"What is the capital of Latvia?",                    a:"Riga",                wrong:["Daugavpils","Liepāja","Jelgava"],               cat:"Capital City", diff:"hard" },
-  { flag:"🇱🇹", q:"What is the capital of Lithuania?",                 a:"Vilnius",             wrong:["Kaunas","Klaipėda","Šiauliai"],                 cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇩", q:"What is the capital of Moldova?",                   a:"Chișinău",            wrong:["Tiraspol","Bălți","Bender"],                    cat:"Capital City", diff:"hard" },
-  { flag:"🇬🇪", q:"What is the capital of Georgia?",                   a:"Tbilisi",             wrong:["Kutaisi","Batumi","Rustavi"],                   cat:"Capital City", diff:"hard" },
-  { flag:"🇦🇲", q:"What is the capital of Armenia?",                   a:"Yerevan",             wrong:["Gyumri","Vanadzor","Vagharshapat"],             cat:"Capital City", diff:"hard" },
-  { flag:"🇦🇿", q:"What is the capital of Azerbaijan?",                a:"Baku",                wrong:["Ganja","Sumqayit","Mingəçevir"],                cat:"Capital City", diff:"hard" },
-  { flag:"🇰🇿", q:"What is the capital of Kazakhstan?",                a:"Astana",              wrong:["Almaty","Shymkent","Karaganda"],                cat:"Capital City", diff:"hard" },
-  { flag:"🇺🇿", q:"What is the capital of Uzbekistan?",                a:"Tashkent",            wrong:["Samarkand","Bukhara","Namangan"],               cat:"Capital City", diff:"hard" },
-  { flag:"🇹🇲", q:"What is the capital of Turkmenistan?",              a:"Ashgabat",            wrong:["Turkmenbashi","Mary","Türkmenabat"],            cat:"Capital City", diff:"hard" },
-  { flag:"🇰🇬", q:"What is the capital of Kyrgyzstan?",                a:"Bishkek",             wrong:["Osh","Jalal-Abad","Karakol"],                   cat:"Capital City", diff:"hard" },
-  { flag:"🇹🇯", q:"What is the capital of Tajikistan?",                a:"Dushanbe",            wrong:["Khujand","Kulob","Bokhtar"],                    cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇳", q:"What is the capital of Mongolia?",                  a:"Ulaanbaatar",         wrong:["Erdenet","Darkhan","Choibalsan"],               cat:"Capital City", diff:"hard" },
-  { flag:"🇰🇵", q:"What is the capital of North Korea?",               a:"Pyongyang",           wrong:["Hamhung","Chongjin","Nampo"],                   cat:"Capital City", diff:"hard" },
-  { flag:"🇹🇼", q:"What is the capital of Taiwan?",                    a:"Taipei",              wrong:["Kaohsiung","Taichung","Tainan"],                cat:"Capital City", diff:"hard" },
-  { flag:"🇰🇭", q:"What is the capital of Cambodia?",                  a:"Phnom Penh",          wrong:["Siem Reap","Battambang","Sihanoukville"],       cat:"Capital City", diff:"hard" },
-  { flag:"🇱🇦", q:"What is the capital of Laos?",                      a:"Vientiane",           wrong:["Pakse","Luang Prabang","Savannakhet"],          cat:"Capital City", diff:"hard" },
-  { flag:"🇧🇳", q:"What is the capital of Brunei?",                    a:"Bandar Seri Begawan", wrong:["Seria","Kuala Belait","Tutong"],                cat:"Capital City", diff:"hard" },
-  { flag:"🇱🇰", q:"What is the capital of Sri Lanka?",                 a:"Colombo",             wrong:["Kandy","Galle","Jaffna"],                       cat:"Capital City", diff:"hard" },
-  { flag:"🇧🇹", q:"What is the capital of Bhutan?",                    a:"Thimphu",             wrong:["Phuntsholing","Punakha","Wangdue"],             cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇻", q:"What is the capital of the Maldives?",              a:"Malé",                wrong:["Addu City","Fuvahmulah","Kulhudhuffushi"],      cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇾", q:"What is the capital of Syria?",                     a:"Damascus",            wrong:["Aleppo","Homs","Latakia"],                      cat:"Capital City", diff:"hard" },
-  { flag:"🇾🇪", q:"What is the capital of Yemen?",                     a:"Sanaa",               wrong:["Aden","Taiz","Hodeidah"],                       cat:"Capital City", diff:"hard" },
-  { flag:"🇴🇲", q:"What is the capital of Oman?",                      a:"Muscat",              wrong:["Salalah","Sohar","Nizwa"],                      cat:"Capital City", diff:"hard" },
-  { flag:"🇧🇭", q:"What is the capital of Bahrain?",                   a:"Manama",              wrong:["Muharraq","Riffa","Hamad Town"],                cat:"Capital City", diff:"hard" },
-  { flag:"🇵🇬", q:"What is the capital of Papua New Guinea?",          a:"Port Moresby",        wrong:["Lae","Mount Hagen","Madang"],                   cat:"Capital City", diff:"hard" },
-  { flag:"🇫🇯", q:"What is the capital of Fiji?",                      a:"Suva",                wrong:["Nadi","Lautoka","Labasa"],                      cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇧", q:"What is the capital of Solomon Islands?",           a:"Honiara",             wrong:["Gizo","Auki","Tulagi"],                         cat:"Capital City", diff:"hard" },
-  { flag:"🇻🇺", q:"What is the capital of Vanuatu?",                   a:"Port Vila",           wrong:["Luganville","Norsup","Lenakel"],                cat:"Capital City", diff:"hard" },
-  { flag:"🇼🇸", q:"What is the capital of Samoa?",                     a:"Apia",                wrong:["Salelologa","Faleasiu","Vaitele"],              cat:"Capital City", diff:"hard" },
-  { flag:"🇹🇴", q:"What is the capital of Tonga?",                     a:"Nukuʻalofa",          wrong:["Neiafu","Pangai","Ohonua"],                     cat:"Capital City", diff:"hard" },
-  { flag:"🇹🇻", q:"What is the capital of Tuvalu?",                    a:"Funafuti",            wrong:["Nanumea","Vaitupu","Nukufetau"],                cat:"Capital City", diff:"hard" },
-  { flag:"🇰🇮", q:"What is the capital of Kiribati?",                  a:"South Tarawa",        wrong:["Betio","Bikenibeu","Bairiki"],                  cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇴", q:"What is the capital of Somalia?",                   a:"Mogadishu",           wrong:["Hargeisa","Kismayo","Bosaso"],                  cat:"Capital City", diff:"hard" },
-  { flag:"🇪🇷", q:"What is the capital of Eritrea?",                   a:"Asmara",              wrong:["Keren","Assab","Massawa"],                      cat:"Capital City", diff:"hard" },
-  { flag:"🇩🇯", q:"What is the capital of Djibouti?",                  a:"Djibouti City",       wrong:["Ali Sabieh","Tadjourah","Obock"],               cat:"Capital City", diff:"hard" },
-  { flag:"🇷🇼", q:"What is the capital of Rwanda?",                    a:"Kigali",              wrong:["Butare","Gisenyi","Ruhengeri"],                 cat:"Capital City", diff:"hard" },
-  { flag:"🇧🇮", q:"What is the capital of Burundi?",                   a:"Gitega",              wrong:["Bujumbura","Ngozi","Rumonge"],                  cat:"Capital City", diff:"hard" },
-  { flag:"🇺🇬", q:"What is the capital of Uganda?",                    a:"Kampala",             wrong:["Entebbe","Gulu","Mbarara"],                     cat:"Capital City", diff:"hard" },
-  { flag:"🇨🇩", q:"What is the capital of DR Congo?",                  a:"Kinshasa",            wrong:["Lubumbashi","Goma","Kisangani"],                cat:"Capital City", diff:"hard" },
-  { flag:"🇨🇬", q:"What is the capital of Republic of Congo?",         a:"Brazzaville",         wrong:["Pointe-Noire","Dolisie","Nkayi"],               cat:"Capital City", diff:"hard" },
-  { flag:"🇨🇫", q:"What is the capital of Central African Republic?",  a:"Bangui",              wrong:["Berbérati","Bambari","Bouar"],                  cat:"Capital City", diff:"hard" },
-  { flag:"🇨🇲", q:"What is the capital of Cameroon?",                  a:"Yaoundé",             wrong:["Douala","Garoua","Bamenda"],                    cat:"Capital City", diff:"hard" },
-  { flag:"🇬🇦", q:"What is the capital of Gabon?",                     a:"Libreville",          wrong:["Port-Gentil","Franceville","Oyem"],             cat:"Capital City", diff:"hard" },
-  { flag:"🇬🇶", q:"What is the capital of Equatorial Guinea?",         a:"Malabo",              wrong:["Bata","Ebebiyín","Aconibe"],                    cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇳", q:"What is the capital of Senegal?",                   a:"Dakar",               wrong:["Thiès","Kaolack","Ziguinchor"],                 cat:"Capital City", diff:"hard" },
-  { flag:"🇬🇳", q:"What is the capital of Guinea?",                    a:"Conakry",             wrong:["Kankan","Kindia","Labé"],                       cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇱", q:"What is the capital of Sierra Leone?",              a:"Freetown",            wrong:["Bo","Kenema","Makeni"],                         cat:"Capital City", diff:"hard" },
-  { flag:"🇱🇷", q:"What is the capital of Liberia?",                   a:"Monrovia",            wrong:["Gbarnga","Kakata","Buchanan"],                  cat:"Capital City", diff:"hard" },
-  { flag:"🇨🇮", q:"What is the capital of Ivory Coast?",               a:"Yamoussoukro",        wrong:["Abidjan","Bouaké","Daloa"],                     cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇱", q:"What is the capital of Mali?",                      a:"Bamako",              wrong:["Sikasso","Mopti","Koutiala"],                   cat:"Capital City", diff:"hard" },
-  { flag:"🇧🇫", q:"What is the capital of Burkina Faso?",              a:"Ouagadougou",         wrong:["Bobo-Dioulasso","Koudougou","Banfora"],         cat:"Capital City", diff:"hard" },
-  { flag:"🇳🇪", q:"What is the capital of Niger?",                     a:"Niamey",              wrong:["Zinder","Maradi","Agadez"],                     cat:"Capital City", diff:"hard" },
-  { flag:"🇹🇩", q:"What is the capital of Chad?",                      a:"N'Djamena",           wrong:["Moundou","Sarh","Abéché"],                      cat:"Capital City", diff:"hard" },
-  { flag:"🇹🇬", q:"What is the capital of Togo?",                      a:"Lomé",                wrong:["Sokodé","Kara","Kpalimé"],                      cat:"Capital City", diff:"hard" },
-  { flag:"🇧🇯", q:"What is the capital of Benin?",                     a:"Porto-Novo",          wrong:["Cotonou","Parakou","Abomey"],                   cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇿", q:"What is the capital of Mozambique?",                a:"Maputo",              wrong:["Beira","Nampula","Quelimane"],                  cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇼", q:"What is the capital of Malawi?",                    a:"Lilongwe",            wrong:["Blantyre","Mzuzu","Zomba"],                     cat:"Capital City", diff:"hard" },
-  { flag:"🇿🇲", q:"What is the capital of Zambia?",                    a:"Lusaka",              wrong:["Ndola","Kitwe","Kabwe"],                        cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇬", q:"What is the capital of Madagascar?",                a:"Antananarivo",        wrong:["Toamasina","Antsirabe","Mahajanga"],            cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇺", q:"What is the capital of Mauritius?",                 a:"Port Louis",          wrong:["Vacoas-Phoenix","Curepipe","Quatre Bornes"],    cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇸", q:"What is the capital of South Sudan?",               a:"Juba",                wrong:["Wau","Malakal","Bentiu"],                       cat:"Capital City", diff:"hard" },
-  { flag:"🇱🇸", q:"What is the capital of Lesotho?",                   a:"Maseru",              wrong:["Teyateyaneng","Mafeteng","Leribe"],             cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇿", q:"What is the capital of Eswatini?",                  a:"Mbabane",             wrong:["Manzini","Lobamba","Siteki"],                   cat:"Capital City", diff:"hard" },
-  { flag:"🇧🇼", q:"What is the capital of Botswana?",                  a:"Gaborone",            wrong:["Francistown","Molepolole","Selebi-Phikwe"],     cat:"Capital City", diff:"hard" },
-  { flag:"🇳🇦", q:"What is the capital of Namibia?",                   a:"Windhoek",            wrong:["Walvis Bay","Swakopmund","Rundu"],              cat:"Capital City", diff:"hard" },
-  { flag:"🇦🇴", q:"What is the capital of Angola?",                    a:"Luanda",              wrong:["Huambo","Lobito","Benguela"],                   cat:"Capital City", diff:"hard" },
-  { flag:"🇭🇹", q:"What is the capital of Haiti?",                     a:"Port-au-Prince",      wrong:["Cap-Haïtien","Gonaïves","Saint-Marc"],          cat:"Capital City", diff:"hard" },
-  { flag:"🇩🇴", q:"What is the capital of the Dominican Republic?",    a:"Santo Domingo",       wrong:["Santiago","San Pedro de Macorís","La Romana"],  cat:"Capital City", diff:"hard" },
-  { flag:"🇹🇹", q:"What is the capital of Trinidad and Tobago?",       a:"Port of Spain",       wrong:["Chaguanas","San Fernando","Arima"],             cat:"Capital City", diff:"hard" },
-  { flag:"🇧🇧", q:"What is the capital of Barbados?",                  a:"Bridgetown",          wrong:["Speightstown","Oistins","Holetown"],            cat:"Capital City", diff:"hard" },
-  { flag:"🇧🇸", q:"What is the capital of The Bahamas?",               a:"Nassau",              wrong:["Freeport","Lucaya","Marsh Harbour"],            cat:"Capital City", diff:"hard" },
-  { flag:"🇬🇩", q:"What is the capital of Grenada?",                   a:"St. George's",        wrong:["Grenville","Gouyave","Victoria"],               cat:"Capital City", diff:"hard" },
-  { flag:"🇱🇨", q:"What is the capital of Saint Lucia?",               a:"Castries",            wrong:["Vieux Fort","Soufrière","Gros Islet"],          cat:"Capital City", diff:"hard" },
-  { flag:"🇻🇨", q:"What is the capital of Saint Vincent and the Grenadines?", a:"Kingstown",   wrong:["Barrouallie","Chateaubelair","Georgetown"],      cat:"Capital City", diff:"hard" },
-  { flag:"🇦🇬", q:"What is the capital of Antigua and Barbuda?",       a:"St. John's",          wrong:["Codrington","Parham","Liberta"],                cat:"Capital City", diff:"hard" },
-  { flag:"🇩🇲", q:"What is the capital of Dominica?",                  a:"Roseau",              wrong:["Portsmouth","Marigot","Berekua"],               cat:"Capital City", diff:"hard" },
-  { flag:"🇰🇳", q:"What is the capital of Saint Kitts and Nevis?",     a:"Basseterre",          wrong:["Charlestown","Sandy Point","Cayon"],            cat:"Capital City", diff:"hard" },
-  { flag:"🇧🇿", q:"What is the capital of Belize?",                    a:"Belmopan",            wrong:["Belize City","San Ignacio","Orange Walk"],      cat:"Capital City", diff:"hard" },
-  { flag:"🇳🇮", q:"What is the capital of Nicaragua?",                 a:"Managua",             wrong:["León","Granada","Masaya"],                      cat:"Capital City", diff:"hard" },
-  { flag:"🇭🇳", q:"What is the capital of Honduras?",                  a:"Tegucigalpa",         wrong:["San Pedro Sula","La Ceiba","Choloma"],          cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇻", q:"What is the capital of El Salvador?",               a:"San Salvador",        wrong:["Santa Ana","San Miguel","Soyapango"],           cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇷", q:"What is the capital of Suriname?",                  a:"Paramaribo",          wrong:["Nieuw Nickerie","Lelydorp","Moengo"],           cat:"Capital City", diff:"hard" },
-  { flag:"🇬🇾", q:"What is the capital of Guyana?",                    a:"Georgetown",          wrong:["Linden","New Amsterdam","Bartica"],             cat:"Capital City", diff:"hard" },
-  { flag:"🇱🇮", q:"What is the capital of Liechtenstein?",             a:"Vaduz",               wrong:["Schaan","Balzers","Triesen"],                   cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇨", q:"What is the capital of Monaco?",                    a:"Monaco",              wrong:["Nice","Cannes","Menton"],                       cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇲", q:"What is the capital of San Marino?",                a:"San Marino",          wrong:["Serravalle","Borgo Maggiore","Fiorentino"],     cat:"Capital City", diff:"hard" },
-  { flag:"🇦🇩", q:"What is the capital of Andorra?",                   a:"Andorra la Vella",    wrong:["Escaldes-Engordany","Sant Julià","Encamp"],     cat:"Capital City", diff:"hard" },
-  { flag:"🇻🇦", q:"What is the capital of Vatican City?",              a:"Vatican City",        wrong:["Rome","Florence","Naples"],                     cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇹", q:"What is the capital of São Tomé and Príncipe?",     a:"São Tomé",            wrong:["Príncipe","Santo António","Trindade"],          cat:"Capital City", diff:"hard" },
-  { flag:"🇨🇻", q:"What is the capital of Cape Verde?",                a:"Praia",               wrong:["Mindelo","São Filipe","Sal Rei"],                cat:"Capital City", diff:"hard" },
-  { flag:"🇬🇲", q:"What is the capital of The Gambia?",                a:"Banjul",              wrong:["Serekunda","Brikama","Bakau"],                  cat:"Capital City", diff:"hard" },
-  { flag:"🇬🇼", q:"What is the capital of Guinea-Bissau?",             a:"Bissau",              wrong:["Bafatá","Gabú","Cacheu"],                       cat:"Capital City", diff:"hard" },
-  { flag:"🇰🇲", q:"What is the capital of Comoros?",                   a:"Moroni",              wrong:["Mutsamudu","Fomboni","Domoni"],                 cat:"Capital City", diff:"hard" },
-  { flag:"🇸🇨", q:"What is the capital of Seychelles?",                a:"Victoria",            wrong:["Anse Boileau","Grand Anse","Beau Vallon"],      cat:"Capital City", diff:"hard" },
-  { flag:"🇲🇷", q:"What is the capital of Mauritania?",                a:"Nouakchott",          wrong:["Nouadhibou","Kiffa","Kaédi"],                   cat:"Capital City", diff:"hard" },
-  { flag:"🇹🇱", q:"What is the capital of Timor-Leste?",               a:"Dili",                wrong:["Baucau","Maliana","Suai"],                      cat:"Capital City", diff:"hard" },
-  // Hard "Which Country"
-  { flag:"🗺️",  q:"Wellington is the capital of which country?",       a:"New Zealand",         wrong:["Australia","Fiji","Samoa"],                     cat:"Which Country", diff:"hard" },
-  { flag:"🗺️",  q:"Rabat is the capital of which country?",            a:"Morocco",             wrong:["Algeria","Tunisia","Libya"],                    cat:"Which Country", diff:"hard" },
-  { flag:"🗺️",  q:"Bogotá is the capital of which country?",           a:"Colombia",            wrong:["Venezuela","Ecuador","Peru"],                   cat:"Which Country", diff:"hard" },
-  { flag:"🗺️",  q:"Naypyidaw is the capital of which country?",        a:"Myanmar",             wrong:["Cambodia","Laos","Thailand"],                   cat:"Which Country", diff:"hard" },
-  { flag:"🗺️",  q:"Dodoma is the capital of which country?",           a:"Tanzania",            wrong:["Kenya","Uganda","Mozambique"],                  cat:"Which Country", diff:"hard" },
-];
-
-// ══════════════════════════════════════════════
-//  CONFIG
-// ══════════════════════════════════════════════
-const QUESTIONS_PER_QUIZ = 15;
-
-const RANKS = [
-  { min: 0.9,  title:"🌟 World Explorer",     desc:"Outstanding! You're a geography genius!" },
-  { min: 0.75, title:"🌎 Globe Trotter",       desc:"Great job! You know the world really well!" },
-  { min: 0.6,  title:"🗺️ Map Reader",          desc:"Nice work! Keep exploring the world!" },
-  { min: 0.4,  title:"✈️ Curious Traveller",   desc:"Good effort! Practice makes perfect!" },
-  { min: 0,    title:"🌱 Young Adventurer",    desc:"Keep going — every explorer starts somewhere!" },
-];
-
-// ══════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════
-let selectedDiff   = "easy";
-let quizQuestions  = [];
-let currentIndex   = 0;
-let score          = 0;
-let answered       = false;
-
-// ══════════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════════
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-function buildQuiz(diff) {
-  const pool = ALL_QUESTIONS.filter(q => q.diff === diff);
-  const shuffled = shuffle(pool);
-  return shuffled.slice(0, Math.min(QUESTIONS_PER_QUIZ, shuffled.length));
-}
-
-// ══════════════════════════════════════════════
-//  QUIZ LOGIC
-// ══════════════════════════════════════════════
-function startQuiz() {
-  quizQuestions = buildQuiz(selectedDiff);
-  currentIndex  = 0;
-  score         = 0;
-  document.getElementById('q-count-display').textContent = quizQuestions.length;
-  showScreen('screen-quiz');
-  renderQuestion();
-}
-
-function renderQuestion() {
-  const q    = quizQuestions[currentIndex];
-  const total = quizQuestions.length;
-  answered   = false;
-
-  // header
-  document.getElementById('progress-info').textContent  = `Question ${currentIndex + 1} of ${total}`;
-  document.getElementById('score-display').textContent  = `Score: ${score}`;
-  document.getElementById('progress-bar').style.width   = `${(currentIndex / total) * 100}%`;
-
-  // question
-  document.getElementById('question-flag').textContent     = q.flag;
-  document.getElementById('question-category').textContent = q.cat;
-  document.getElementById('question-text').textContent     = q.q;
-
-  // answers
-  const options = shuffle([q.a, ...q.wrong]);
-  const grid    = document.getElementById('answers-grid');
-  grid.innerHTML = '';
-
-  options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.className   = 'answer-btn';
-    btn.textContent = opt;
-    btn.addEventListener('click', () => handleAnswer(btn, opt, q.a));
-    grid.appendChild(btn);
-  });
-
-  // feedback
-  const fb = document.getElementById('feedback-bar');
-  fb.className = 'feedback-bar';
-  fb.textContent = '';
-}
-
-function handleAnswer(btn, chosen, correct) {
-  if (answered) return;
-  answered = true;
-
-  const allBtns = document.querySelectorAll('.answer-btn');
-  allBtns.forEach(b => b.disabled = true);
-
-  const fb = document.getElementById('feedback-bar');
-
-  if (chosen === correct) {
-    score++;
-    btn.classList.add('correct');
-    fb.className   = 'feedback-bar correct-fb show';
-    fb.textContent = '✅ Correct! Well done!';
-    playCorrect();
-  } else {
-    btn.classList.add('wrong');
-    // highlight correct answer
-    allBtns.forEach(b => { if (b.textContent === correct) b.classList.add('correct'); });
-    fb.className   = 'feedback-bar wrong-fb show';
-    fb.textContent = `❌ Not quite! The answer is ${correct}.`;
-    playWrong();
+  /* ══════════════ NAVIGATION ══════════════ */
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
   }
 
-  document.getElementById('score-display').textContent = `Score: ${score}`;
+  function showWelcome() { show('welcome'); }
 
-  setTimeout(() => {
-    currentIndex++;
-    if (currentIndex < quizQuestions.length) {
-      renderQuestion();
-    } else {
-      showResults();
+  function startPractice() {
+    currentIndex = 0;
+    loadPassage();
+    show('practice');
+  }
+
+  function nextPassage() {
+    currentIndex = (currentIndex + 1) % passages.length;
+    loadPassage();
+    show('practice');
+  }
+
+  /* ══════════════ LOAD PASSAGE ══════════════ */
+  function loadPassage() {
+    const p = passages[currentIndex];
+    document.getElementById('passage-title').textContent = p.title;
+    document.getElementById('passage-counter').textContent =
+      `Passage ${currentIndex + 1} of ${passages.length}`;
+    document.getElementById('progress-fill').style.width =
+      `${((currentIndex + 1) / passages.length) * 100}%`;
+
+    // Render tag + body
+    document.getElementById('passage-body').innerHTML =
+      `<span class="tag">${p.tag}</span><br>${p.body}`;
+    document.getElementById('question-text').textContent = '❓ ' + p.question;
+
+    // Clear inputs
+    ['r','a','c','e'].forEach(k => {
+      document.getElementById(`ans-${k}`).value = '';
+    });
+  }
+
+  /* ══════════════ GRADING ══════════════ */
+
+  // Returns 0-3
+  function gradeR(text, passage) {
+    const t = text.toLowerCase().trim();
+    if (t.length < 10) return 0;
+    const q = passage.question.toLowerCase();
+    const qWords = q.replace(/[^a-z\s]/g, '').split(/\s+/).filter(w => w.length > 3);
+    const hits = qWords.filter(w => t.includes(w)).length;
+    const ratio = hits / qWords.length;
+    // Must restate (use question words) AND be a statement (not end with ?)
+    if (t.endsWith('?')) return 1;
+    if (ratio >= 0.5 && t.length >= 20) return 3;
+    if (ratio >= 0.3 || t.length >= 30) return 2;
+    return 1;
+  }
+
+  function gradeA(text, passage) {
+    const t = text.toLowerCase().trim();
+    if (t.length < 10) return 0;
+    // Look for direct answer words relevant to question topic
+    const keyHits = passage.keyWords.filter(k => t.includes(k)).length;
+    if (t.length >= 40 && keyHits >= 2) return 3;
+    if (t.length >= 25 && keyHits >= 1) return 2;
+    if (t.length >= 15) return 1;
+    return 0;
+  }
+
+  function gradeC(text, passage) {
+    const t = text.toLowerCase().trim();
+    if (t.length < 10) return 0;
+    const citePhrases = [
+      'according to', 'the text says', 'the passage says', 'the passage states',
+      'the author says', 'in the passage', 'in the text', 'for example',
+      'the article states', 'as stated', 'the text states', 'as the text',
+      'the reading says', 'based on the text', 'the story says',
+    ];
+    const hasCitePhrase = citePhrases.some(ph => t.includes(ph));
+    const evidenceHits = passage.evidenceWords.filter(w => t.toLowerCase().includes(w.toLowerCase())).length;
+
+    if (hasCitePhrase && evidenceHits >= 1) return 3;
+    if (hasCitePhrase || evidenceHits >= 2) return 2;
+    if (evidenceHits >= 1 || t.length >= 30) return 1;
+    return 0;
+  }
+
+  function gradeE(text, passage) {
+    const t = text.toLowerCase().trim();
+    if (t.length < 10) return 0;
+    const explainPhrases = [
+      'this shows', 'this means', 'this is important', 'this tells us',
+      'therefore', 'as a result', 'because of this', 'this proves',
+      'this demonstrates', 'in other words', 'this helps', 'this explains',
+      'this is why', 'so this means', 'which means', 'this suggests',
+    ];
+    const hasExplainPhrase = explainPhrases.some(ph => t.includes(ph));
+    const keyHits = passage.keyWords.filter(k => t.includes(k)).length;
+
+    if (hasExplainPhrase && (keyHits >= 1 || t.length >= 40)) return 3;
+    if (hasExplainPhrase || (keyHits >= 1 && t.length >= 30)) return 2;
+    if (t.length >= 25) return 1;
+    return 0;
+  }
+
+  /* ══════════════ FEEDBACK TEXT ══════════════ */
+  function starsFor(score) {
+    return '⭐'.repeat(score) + '☆'.repeat(3 - score);
+  }
+
+  function feedbackFor(part, score, answer, passage) {
+    const tips = {
+      r: [
+        { score: 0, comment: "Your restatement is missing. Try turning the question into a statement.", tip: 'Example: If the question is "Why is the sky blue?", write "The sky is blue because…"' },
+        { score: 1, comment: "Good start! Make sure you don't end your restatement with a question mark — turn it into a statement.", tip: 'Tip: Use words from the question in your opening sentence.' },
+        { score: 2, comment: "Nice restatement! Try to include a few more key words from the question to make it even stronger.", tip: null },
+        { score: 3, comment: "Excellent! You clearly restated the question as a statement using key words.", tip: null },
+      ],
+      a: [
+        { score: 0, comment: "No answer found. Make sure you directly answer the question asked.", tip: 'Tip: After restating, clearly state your answer in 1-2 sentences.' },
+        { score: 1, comment: "You started an answer, but try to be more specific and complete.", tip: 'Tip: A good answer is clear and uses topic words from the passage.' },
+        { score: 2, comment: "Good answer! Adding a bit more detail would make it even stronger.", tip: null },
+        { score: 3, comment: "Excellent! Your answer is clear, direct, and specific.", tip: null },
+      ],
+      c: [
+        { score: 0, comment: "You need to cite evidence from the passage. Use a phrase like "According to the text…" or "The passage states…"", tip: 'Tip: Copy or paraphrase a specific detail from the reading.' },
+        { score: 1, comment: "You included some details, but try using a citation phrase like "According to the text…" to make it clearer.", tip: 'Tip: Citation phrases show the reader you are using the text.' },
+        { score: 2, comment: "Good evidence! Using a citation phrase like "According to the text…" would make this even better.", tip: null },
+        { score: 3, comment: "Great job citing evidence! You used a citation phrase and included a specific detail from the passage.", tip: null },
+      ],
+      e: [
+        { score: 0, comment: "The explanation is missing. Tell the reader WHY the evidence matters.", tip: 'Tip: Start with "This shows…" or "This means…" and connect back to your answer.' },
+        { score: 1, comment: "You started explaining, but try to connect the evidence more clearly to your answer.", tip: 'Tip: Use "This shows…" or "This is important because…" to guide your explanation.' },
+        { score: 2, comment: "Good explanation! Adding a sentence about why this matters would make it even stronger.", tip: null },
+        { score: 3, comment: "Excellent explanation! You clearly connected the evidence back to the question.", tip: null },
+      ],
+    };
+
+    const entry = tips[part].find(t => t.score === score) || tips[part][tips[part].length - 1];
+    return entry;
+  }
+
+  function renderFeedbackBlock(id, cssClass, letter, word, score, answer, passage) {
+    const fb = feedbackFor(cssClass, score, answer, passage);
+    const el = document.getElementById(id);
+    el.innerHTML = `
+      <div class="fb-header">
+        <div class="fb-title">
+          <span class="badge ${cssClass}">${letter}</span>
+          <span>${word}</span>
+        </div>
+        <span class="stars">${starsFor(score)}</span>
+      </div>
+      <div class="fb-student-answer">"${answer.trim() || '(no answer given)'}"</div>
+      <div class="fb-comment">${fb.comment}</div>
+      ${fb.tip ? `<div class="tip-box">💡 ${fb.tip}</div>` : ''}
+    `;
+  }
+
+  /* ══════════════ SUBMIT ══════════════ */
+  function submitAnswer() {
+    const p = passages[currentIndex];
+    const ansR = document.getElementById('ans-r').value;
+    const ansA = document.getElementById('ans-a').value;
+    const ansC = document.getElementById('ans-c').value;
+    const ansE = document.getElementById('ans-e').value;
+
+    if ([ansR, ansA, ansC, ansE].every(a => a.trim().length === 0)) {
+      alert('Please write your RACE response before submitting!');
+      return;
     }
-  }, 1600);
-}
 
-// ══════════════════════════════════════════════
-//  RESULTS
-// ══════════════════════════════════════════════
-function showResults() {
-  const total    = quizQuestions.length;
-  const wrong    = total - score;
-  const pct      = score / total;
-  const accuracy = Math.round(pct * 100);
+    const scoreR = gradeR(ansR, p);
+    const scoreA = gradeA(ansA, p);
+    const scoreC = gradeC(ansC, p);
+    const scoreE = gradeE(ansE, p);
+    const total = scoreR + scoreA + scoreC + scoreE;
 
-  // score circle
-  document.getElementById('final-score').textContent  = score;
-  document.getElementById('final-out-of').textContent = `out of ${total}`;
+    // Score hero
+    document.getElementById('score-num').textContent = total;
+    const emoji = total >= 11 ? '🏆' : total >= 8 ? '🌟' : total >= 5 ? '👍' : '💪';
+    const msg = total >= 11 ? 'Outstanding work! You nailed the RACE method!'
+              : total >= 8  ? 'Great job! You have a solid RACE response.'
+              : total >= 5  ? 'Good effort! Review the tips to level up your RACE.'
+              :               'Keep practising — every RACE gets better!';
+    document.getElementById('score-emoji').textContent = emoji;
+    document.getElementById('score-msg').textContent = msg;
 
-  // stats
-  document.getElementById('stat-correct').textContent  = score;
-  document.getElementById('stat-wrong').textContent    = wrong;
-  document.getElementById('stat-accuracy').textContent = `${accuracy}%`;
+    // Feedback blocks
+    renderFeedbackBlock('feedback-r', 'r', 'R', 'Restate the Question', scoreR, ansR, p);
+    renderFeedbackBlock('feedback-a', 'a', 'A', 'Answer the Question',  scoreA, ansA, p);
+    renderFeedbackBlock('feedback-c', 'c', 'C', 'Cite Evidence',        scoreC, ansC, p);
+    renderFeedbackBlock('feedback-e', 'e', 'E', 'Explain / Extend',     scoreE, ansE, p);
 
-  // rank
-  const rank = RANKS.find(r => pct >= r.min);
-  document.getElementById('rank-title').textContent = rank.title;
-  document.getElementById('rank-desc').textContent  = rank.desc;
+    // Next button label
+    const isLast = currentIndex === passages.length - 1;
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.textContent = isLast ? '🔄 Start Over' : 'Next Passage →';
 
-  // icon & title
-  let icon, title, sub;
-  if (pct >= 0.9)       { icon = "🎉"; title = "Incredible!";   sub = "You're a geography champion!"; }
-  else if (pct >= 0.75) { icon = "🌟"; title = "Fantastic!";    sub = "You really know your capitals!"; }
-  else if (pct >= 0.6)  { icon = "👏"; title = "Well Done!";    sub = "Nice geography knowledge!"; }
-  else if (pct >= 0.4)  { icon = "💪"; title = "Good Try!";     sub = "Keep exploring the world!"; }
-  else                  { icon = "🌱"; title = "Keep Learning!"; sub = "Every explorer starts somewhere!"; }
-
-  document.getElementById('results-icon').textContent    = icon;
-  document.getElementById('results-title').textContent   = title;
-  document.getElementById('results-subtitle').textContent = sub;
-
-  // progress bar to 100%
-  document.getElementById('progress-bar').style.width = '100%';
-
-  showScreen('screen-results');
-  playVictory();
-}
-
-// ══════════════════════════════════════════════
-//  SOUND ENGINE  (Web Audio API – no external files)
-// ══════════════════════════════════════════════
-let audioCtx = null;
-let muted    = false;
-
-function getCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
-
-/* --- low-level helpers --- */
-function playTone(freq, startTime, dur, type = 'sine', gainVal = 0.4, ctx) {
-  const osc  = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.type      = type;
-  osc.frequency.setValueAtTime(freq, startTime);
-  gain.gain.setValueAtTime(gainVal, startTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
-  osc.start(startTime);
-  osc.stop(startTime + dur + 0.01);
-}
-
-function playFreqSweep(startFreq, endFreq, startTime, dur, type = 'sine', gainVal = 0.35, ctx) {
-  const osc  = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.type = type;
-  osc.frequency.setValueAtTime(startFreq, startTime);
-  osc.frequency.exponentialRampToValueAtTime(endFreq, startTime + dur);
-  gain.gain.setValueAtTime(gainVal, startTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
-  osc.start(startTime);
-  osc.stop(startTime + dur + 0.01);
-}
-
-/* --- correct sound variants --- */
-function soundCorrect1(ctx) { // ascending chime  C5→E5→G5
-  const t = ctx.currentTime;
-  [[523,0],[659,0.12],[784,0.24]].forEach(([f,d]) => playTone(f, t+d, 0.22, 'sine', 0.38, ctx));
-}
-
-function soundCorrect2(ctx) { // sparkle sweep + ping
-  const t = ctx.currentTime;
-  playFreqSweep(400, 1200, t, 0.18, 'sine', 0.3, ctx);
-  playTone(1047, t+0.2, 0.25, 'sine', 0.4, ctx);
-}
-
-function soundCorrect3(ctx) { // happy 4-note fanfare  C5→E5→G5→C6
-  const t = ctx.currentTime;
-  [[523,0],[659,0.1],[784,0.2],[1047,0.32]].forEach(([f,d]) => playTone(f, t+d, 0.18, 'triangle', 0.4, ctx));
-}
-
-function soundCorrect4(ctx) { // bouncy pop  (two quick sine bursts)
-  const t = ctx.currentTime;
-  playFreqSweep(600, 900, t, 0.08, 'sine', 0.35, ctx);
-  playFreqSweep(700, 1100, t+0.12, 0.1, 'sine', 0.35, ctx);
-  playTone(880, t+0.25, 0.2, 'sine', 0.35, ctx);
-}
-
-const correctSounds = [soundCorrect1, soundCorrect2, soundCorrect3, soundCorrect4];
-
-/* --- wrong sound variants --- */
-function soundWrong1(ctx) { // classic buzzer
-  const t = ctx.currentTime;
-  playTone(180, t, 0.4, 'sawtooth', 0.25, ctx);
-  playTone(140, t+0.1, 0.35, 'sawtooth', 0.2, ctx);
-}
-
-function soundWrong2(ctx) { // womp-womp descending trombone
-  const t = ctx.currentTime;
-  playFreqSweep(440, 300, t,      0.22, 'sawtooth', 0.22, ctx);
-  playFreqSweep(300, 180, t+0.22, 0.25, 'sawtooth', 0.22, ctx);
-}
-
-function soundWrong3(ctx) { // quick descending blip
-  const t = ctx.currentTime;
-  playFreqSweep(600, 200, t, 0.3, 'square', 0.18, ctx);
-}
-
-function soundWrong4(ctx) { // cartoon boing (sine warble)
-  const t = ctx.currentTime;
-  const osc  = ctx.createOscillator();
-  const lfo  = ctx.createOscillator();
-  const lfoG = ctx.createGain();
-  const gain = ctx.createGain();
-  lfo.connect(lfoG);
-  lfoG.connect(osc.frequency);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.type      = 'sine';
-  osc.frequency.setValueAtTime(350, t);
-  osc.frequency.exponentialRampToValueAtTime(150, t + 0.5);
-  lfo.frequency.setValueAtTime(12, t);
-  lfoG.gain.setValueAtTime(60, t);
-  gain.gain.setValueAtTime(0.3, t);
-  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
-  lfo.start(t); lfo.stop(t + 0.55);
-  osc.start(t); osc.stop(t + 0.55);
-}
-
-const wrongSounds = [soundWrong1, soundWrong2, soundWrong3, soundWrong4];
-
-/* --- quiz complete fanfare --- */
-function soundVictory(ctx) {
-  const t = ctx.currentTime;
-  // melody: C5 E5 G5 E5 G5 C6
-  [[523,0],[659,0.12],[784,0.24],[659,0.36],[784,0.48],[1047,0.62]].forEach(([f,d]) =>
-    playTone(f, t+d, 0.2, 'triangle', 0.38, ctx)
-  );
-}
-
-async function playCorrect() {
-  if (muted) return;
-  const ctx = getCtx();
-  if (ctx.state === 'suspended') await ctx.resume();
-  const fn = correctSounds[Math.floor(Math.random() * correctSounds.length)];
-  fn(ctx);
-}
-
-async function playWrong() {
-  if (muted) return;
-  const ctx = getCtx();
-  if (ctx.state === 'suspended') await ctx.resume();
-  const fn = wrongSounds[Math.floor(Math.random() * wrongSounds.length)];
-  fn(ctx);
-}
-
-async function playVictory() {
-  if (muted) return;
-  const ctx = getCtx();
-  if (ctx.state === 'suspended') await ctx.resume();
-  soundVictory(ctx);
-}
-
-/* ── mute button ── */
-function toggleMute() {
-  muted = !muted;
-  document.querySelectorAll('.mute-btn').forEach(b => b.textContent = muted ? '🔇' : '🔊');
-}
-
-// ══════════════════════════════════════════════
-//  EVENT LISTENERS
-// ══════════════════════════════════════════════
-document.querySelectorAll('.diff-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    selectedDiff = btn.dataset.diff;
-  });
-});
-
-document.getElementById('btn-start').addEventListener('click', () => { getCtx(); startQuiz(); });
-
-
-document.getElementById('btn-same-diff').addEventListener('click', () => {
-  startQuiz(); // same difficulty
-});
-
-document.getElementById('btn-menu').addEventListener('click', () => {
-  showScreen('screen-welcome');
-});
+    show('results');
+  }
 </script>
 </body>
 </html>
