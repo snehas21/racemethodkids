@@ -4,252 +4,362 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RACE Method Practice</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --blue:   #2563eb;
-      --green:  #16a34a;
-      --yellow: #ca8a04;
-      --red:    #dc2626;
-      --purple: #7c3aed;
-      --bg:     #f0f4ff;
-      --card:   #ffffff;
-      --border: #e2e8f0;
-      --text:   #1e293b;
-      --muted:  #64748b;
+      --r: #ef4444;  --r-light: #fff1f2;
+      --a: #16a34a;  --a-light: #f0fdf4;
+      --c: #d97706;  --c-light: #fffbeb;
+      --e: #7c3aed;  --e-light: #f5f3ff;
+      --card:  #ffffff;
+      --border:#e5e7eb;
+      --text:  #1f2937;
+      --muted: #6b7280;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      font-family: 'Nunito', 'Segoe UI', sans-serif;
       min-height: 100vh;
-      padding: 20px;
+      padding: 20px 16px 48px;
+      background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 50%, #fce7f3 100%);
+      animation: bgPulse 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      from { background: linear-gradient(135deg, #dbeafe, #ede9fe, #fce7f3); }
+      to   { background: linear-gradient(135deg, #fce7f3, #dbeafe, #ede9fe); }
     }
 
     /* ── SCREENS ── */
     .screen { display: none; }
-    .screen.active { display: block; }
+    .screen.active { display: block; animation: fadeUp .4s ease both; }
 
-    /* ── WELCOME ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ══════════════ WELCOME ══════════════ */
     #welcome {
       max-width: 680px;
-      margin: 40px auto;
+      margin: 28px auto 0;
       text-align: center;
     }
 
-    .logo { font-size: 72px; margin-bottom: 12px; }
-
-    h1.title {
-      font-size: 2.4rem;
-      font-weight: 800;
-      color: var(--blue);
-      margin-bottom: 8px;
+    .mascot {
+      font-size: 84px;
+      display: block;
+      margin-bottom: 10px;
+      animation: float 3s ease-in-out infinite;
     }
 
-    .subtitle {
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50%       { transform: translateY(-14px) rotate(3deg); }
+    }
+
+    .welcome-title {
+      font-size: 3.2rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .wt-race { display: inline-block; }
+    .wt-r { color: var(--r); }
+    .wt-a { color: var(--a); }
+    .wt-c { color: var(--c); }
+    .wt-e { color: var(--e); }
+    .wt-rest { color: var(--text); font-size: 2.6rem; }
+
+    .welcome-sub {
       font-size: 1.05rem;
+      font-weight: 700;
       color: var(--muted);
-      margin-bottom: 32px;
+      margin-bottom: 36px;
+      line-height: 1.5;
     }
 
+    /* RACE overview cards */
     .race-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
       margin-bottom: 36px;
+      text-align: left;
     }
 
     .race-card {
       background: var(--card);
-      border-radius: 16px;
-      padding: 20px 16px;
-      border-left: 6px solid;
-      text-align: left;
-      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      border-radius: 20px;
+      padding: 20px 18px;
+      box-shadow: 0 4px 18px rgba(0,0,0,.09);
+      border-top: 5px solid;
+      transition: transform .2s, box-shadow .2s;
     }
 
-    .race-card.r { border-color: var(--blue); }
-    .race-card.a { border-color: var(--green); }
-    .race-card.c { border-color: var(--yellow); }
-    .race-card.e { border-color: var(--purple); }
+    .race-card:hover { transform: translateY(-5px); box-shadow: 0 10px 28px rgba(0,0,0,.13); }
+    .race-card.r { border-color: var(--r); }
+    .race-card.a { border-color: var(--a); }
+    .race-card.c { border-color: var(--c); }
+    .race-card.e { border-color: var(--e); }
 
-    .race-letter {
-      font-size: 2rem;
+    .rc-letter {
+      font-size: 2.2rem;
       font-weight: 900;
       line-height: 1;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
-    .race-card.r .race-letter { color: var(--blue); }
-    .race-card.a .race-letter { color: var(--green); }
-    .race-card.c .race-letter { color: var(--yellow); }
-    .race-card.e .race-letter { color: var(--purple); }
+    .race-card.r .rc-letter { color: var(--r); }
+    .race-card.a .rc-letter { color: var(--a); }
+    .race-card.c .rc-letter { color: var(--c); }
+    .race-card.e .rc-letter { color: var(--e); }
 
-    .race-word { font-weight: 700; font-size: 1rem; }
-    .race-desc { font-size: .88rem; color: var(--muted); margin-top: 4px; }
+    .rc-word { font-weight: 800; font-size: .98rem; color: var(--text); margin-bottom: 4px; }
+    .rc-desc { font-size: .84rem; font-weight: 600; color: var(--muted); line-height: 1.4; }
 
-    /* ── PRACTICE SCREEN ── */
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 30px;
+      border-radius: 50px;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn:hover   { transform: translateY(-3px); }
+    .btn:active  { transform: scale(.97) translateY(0); }
+    .btn:disabled { opacity: .5; cursor: default; transform: none !important; }
+
+    .btn-start {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      color: #fff;
+      font-size: 1.2rem;
+      padding: 17px 48px;
+      box-shadow: 0 6px 24px rgba(99,102,241,.4);
+    }
+    .btn-start:hover { box-shadow: 0 10px 32px rgba(99,102,241,.5); }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(22,163,74,.35);
+    }
+    .btn-submit:hover { box-shadow: 0 8px 22px rgba(22,163,74,.45); }
+
+    .btn-ghost {
+      background: #fff;
+      color: var(--muted);
+      border: 2px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .btn-ghost:hover { background: #f9fafb; }
+
+    .btn-next {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(59,130,246,.35);
+    }
+    .btn-next:hover { box-shadow: 0 8px 22px rgba(59,130,246,.45); }
+
+    .btn-home {
+      background: #fff;
+      color: #6b7280;
+      border: 2px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .btn-home:hover { background: #f9fafb; }
+
+    /* ══════════════ PRACTICE ══════════════ */
     #practice {
-      max-width: 900px;
-      margin: 20px auto;
+      max-width: 960px;
+      margin: 18px auto 0;
     }
 
     .top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
     }
 
-    .progress-label {
-      font-size: .9rem;
+    .passage-name {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 1px;
+    }
+
+    .passage-counter {
+      font-size: .88rem;
+      font-weight: 700;
       color: var(--muted);
     }
 
-    .progress-bar-wrap {
-      flex: 1;
-      max-width: 220px;
-      height: 8px;
-      background: var(--border);
-      border-radius: 99px;
-      overflow: hidden;
-    }
+    .dot-progress { display: flex; gap: 7px; align-items: center; }
 
-    .progress-bar-fill {
-      height: 100%;
-      background: var(--blue);
-      border-radius: 99px;
-      transition: width .4s;
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.6);
+      border: 2px solid var(--border);
+      transition: background .3s, transform .3s;
     }
+    .dot.done  { background: #fbbf24; border-color: #f59e0b; transform: scale(1.1); }
+    .dot.current { background: #6366f1; border-color: #4f46e5; transform: scale(1.2); }
 
     .layout {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
+      align-items: start;
     }
 
-    @media (max-width: 640px) {
-      .layout { grid-template-columns: 1fr; }
-      .race-grid { grid-template-columns: 1fr; }
-    }
-
-    .card {
+    /* Passage card */
+    .passage-card {
       background: var(--card);
-      border-radius: 16px;
+      border-radius: 20px;
       padding: 24px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+      box-shadow: 0 4px 16px rgba(0,0,0,.07);
+      margin-bottom: 16px;
     }
 
-    .card h2 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--muted);
+    .card-section-label {
+      font-size: .75rem;
+      font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: .06em;
-      margin-bottom: 10px;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .passage-tag {
+      display: inline-block;
+      background: linear-gradient(135deg, #dbeafe, #ede9fe);
+      color: #4f46e5;
+      font-size: .78rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-bottom: 12px;
     }
 
     .passage-text {
-      font-size: .97rem;
-      line-height: 1.75;
+      font-size: .96rem;
+      font-weight: 600;
+      line-height: 1.8;
       color: var(--text);
     }
 
     .question-box {
-      background: #eff6ff;
-      border-left: 4px solid var(--blue);
-      border-radius: 8px;
-      padding: 14px 16px;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--blue);
-      margin-top: 18px;
+      background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+      border-radius: 16px;
+      padding: 16px 18px;
+      border: 2px solid #c7d2fe;
     }
 
-    /* RACE form */
-    .race-section {
-      margin-bottom: 20px;
-    }
-
-    .race-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .q-label {
+      font-size: .72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #6366f1;
       margin-bottom: 6px;
     }
 
+    .q-text {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #3730a3;
+      line-height: 1.5;
+    }
+
+    /* RACE form */
+    .form-card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.07);
+    }
+
+    .form-title {
+      font-size: .75rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .race-section { margin-bottom: 18px; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
     .badge {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 900;
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: #fff;
       flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(0,0,0,.2);
     }
+    .badge.r { background: linear-gradient(135deg, #ef4444, #f97316); }
+    .badge.a { background: linear-gradient(135deg, #16a34a, #22c55e); }
+    .badge.c { background: linear-gradient(135deg, #d97706, #fbbf24); }
+    .badge.e { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
 
-    .badge.r { background: var(--blue); }
-    .badge.a { background: var(--green); }
-    .badge.c { background: var(--yellow); }
-    .badge.e { background: var(--purple); }
+    .section-name { font-weight: 800; font-size: .95rem; color: var(--text); }
 
-    .section-title { font-weight: 700; font-size: .95rem; }
-    .section-hint  { font-size: .82rem; color: var(--muted); margin-bottom: 6px; }
+    .section-hint {
+      font-size: .81rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin: 4px 0 7px 46px;
+    }
 
     textarea {
       width: 100%;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
+      border: 2.5px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 14px;
       font-family: inherit;
-      font-size: .95rem;
+      font-size: .94rem;
+      font-weight: 600;
       resize: vertical;
       min-height: 80px;
-      transition: border-color .2s;
+      transition: border-color .2s, box-shadow .2s, background .2s;
       color: var(--text);
+      background: #fafafa;
+      line-height: 1.6;
     }
 
-    textarea:focus {
-      outline: none;
-      border-color: var(--blue);
-    }
-
-    /* ── BUTTONS ── */
-    .btn {
-      display: inline-block;
-      padding: 12px 28px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      border: none;
-      transition: transform .1s, opacity .2s;
-    }
-
-    .btn:active { transform: scale(.97); }
-    .btn:disabled { opacity: .5; cursor: default; }
-
-    .btn-primary {
-      background: var(--blue);
-      color: #fff;
-    }
-
-    .btn-success {
-      background: var(--green);
-      color: #fff;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--border);
-      color: var(--text);
-    }
+    textarea:focus { outline: none; background: #fff; }
+    #ans-r:focus { border-color: var(--r); box-shadow: 0 0 0 3px rgba(239,68,68,.12); }
+    #ans-a:focus { border-color: var(--a); box-shadow: 0 0 0 3px rgba(22,163,74,.12); }
+    #ans-c:focus { border-color: var(--c); box-shadow: 0 0 0 3px rgba(217,119,6,.12); }
+    #ans-e:focus { border-color: var(--e); box-shadow: 0 0 0 3px rgba(124,58,237,.12); }
 
     .btn-row {
       display: flex;
@@ -259,39 +369,94 @@
       flex-wrap: wrap;
     }
 
-    /* ── RESULTS ── */
-    #results {
-      max-width: 760px;
-      margin: 30px auto;
+    /* ══════════════ RESULTS ══════════════ */
+    #results { max-width: 780px; margin: 28px auto 0; }
+
+    /* confetti container */
+    #confetti-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 999;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      opacity: 0;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0%   { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
     }
 
     .score-hero {
-      text-align: center;
       background: var(--card);
-      border-radius: 20px;
-      padding: 36px 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+      border-radius: 24px;
+      padding: 40px 28px 36px;
+      text-align: center;
+      margin-bottom: 22px;
+      box-shadow: 0 6px 24px rgba(0,0,0,.09);
+      position: relative;
+      overflow: hidden;
     }
 
-    .score-emoji { font-size: 56px; margin-bottom: 8px; }
-    .score-number { font-size: 3rem; font-weight: 900; color: var(--blue); }
-    .score-denom  { font-size: 1.4rem; color: var(--muted); }
-    .score-msg    { margin-top: 8px; font-size: 1.05rem; color: var(--muted); }
+    .score-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(99,102,241,.04), rgba(168,85,247,.04));
+      pointer-events: none;
+    }
 
-    .feedback-section {
+    .score-emoji {
+      font-size: 68px;
+      display: block;
+      margin-bottom: 12px;
+      animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0) rotate(-20deg); }
+      to   { transform: scale(1) rotate(0deg); }
+    }
+
+    .score-number {
+      font-size: 4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .score-denom { font-size: 1.6rem; font-weight: 700; color: var(--muted); }
+    .score-msg {
+      margin-top: 12px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #4b5563;
+    }
+
+    /* feedback blocks */
+    .fb-block {
       background: var(--card);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 20px 22px;
       margin-bottom: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.05);
-      border-left: 6px solid;
+      box-shadow: 0 3px 12px rgba(0,0,0,.06);
+      border-top: 5px solid;
     }
-
-    .feedback-section.r { border-color: var(--blue); }
-    .feedback-section.a { border-color: var(--green); }
-    .feedback-section.c { border-color: var(--yellow); }
-    .feedback-section.e { border-color: var(--purple); }
+    .fb-block.r { border-color: var(--r); }
+    .fb-block.a { border-color: var(--a); }
+    .fb-block.c { border-color: var(--c); }
+    .fb-block.e { border-color: var(--e); }
 
     .fb-header {
       display: flex;
@@ -304,157 +469,165 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      font-weight: 700;
-      font-size: 1rem;
+      font-weight: 800;
+      font-size: .98rem;
     }
 
-    .stars { font-size: 1.3rem; letter-spacing: 2px; }
+    .stars { font-size: 1.4rem; letter-spacing: 1px; }
 
-    .fb-student-answer {
+    .fb-answer {
       background: #f8fafc;
-      border-radius: 8px;
+      border-left: 3px solid var(--border);
+      border-radius: 10px;
       padding: 10px 14px;
-      font-size: .93rem;
+      font-size: .91rem;
+      font-weight: 600;
       color: var(--muted);
-      margin-bottom: 10px;
       font-style: italic;
       line-height: 1.6;
+      margin-bottom: 10px;
     }
 
     .fb-comment {
       font-size: .93rem;
+      font-weight: 700;
       line-height: 1.6;
+      color: var(--text);
     }
 
     .tip-box {
-      background: #fef9c3;
-      border-radius: 8px;
+      background: linear-gradient(135deg, #fef9c3, #fef3c7);
+      border-left: 3px solid #fbbf24;
+      border-radius: 10px;
       padding: 10px 14px;
       font-size: .88rem;
-      color: #713f12;
-      margin-top: 8px;
+      font-weight: 700;
+      color: #78350f;
+      margin-top: 10px;
     }
 
     .result-actions {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       justify-content: center;
-      margin-top: 28px;
+      margin-top: 32px;
       flex-wrap: wrap;
     }
 
-    /* ── MISC ── */
-    .tag {
-      display: inline-block;
-      background: #dbeafe;
-      color: var(--blue);
-      font-size: .78rem;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 99px;
-      margin-bottom: 10px;
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      .layout, .race-grid { grid-template-columns: 1fr; }
+      .welcome-title { font-size: 2.5rem; }
+      .wt-rest { font-size: 2rem; }
     }
   </style>
 </head>
 <body>
 
+<div id="confetti-layer"></div>
+
 <!-- ══════════════ WELCOME ══════════════ -->
 <div id="welcome" class="screen active">
-  <div class="logo">✏️</div>
-  <h1 class="title">RACE Method Practice</h1>
-  <p class="subtitle">Read a passage, answer a question using the RACE method, and get instant feedback!</p>
+  <span class="mascot">🚀</span>
+
+  <h1 class="welcome-title">
+    <span class="wt-race"><span class="wt-r">R</span><span class="wt-a">A</span><span class="wt-c">C</span><span class="wt-e">E</span></span>
+    <span class="wt-rest"> Method Practice</span>
+  </h1>
+  <p class="welcome-sub">Read a passage, answer a question using the RACE method,<br>and get instant feedback! 🌟</p>
 
   <div class="race-grid">
     <div class="race-card r">
-      <div class="race-letter">R</div>
-      <div class="race-word">Restate the Question</div>
-      <div class="race-desc">Turn the question into a statement that starts your answer.</div>
+      <div class="rc-letter">R</div>
+      <div class="rc-word">Restate the Question</div>
+      <div class="rc-desc">Turn the question into a statement that starts your answer.</div>
     </div>
     <div class="race-card a">
-      <div class="race-letter">A</div>
-      <div class="race-word">Answer the Question</div>
-      <div class="race-desc">Give a clear, direct answer to the question.</div>
+      <div class="rc-letter">A</div>
+      <div class="rc-word">Answer the Question</div>
+      <div class="rc-desc">Give a clear, direct answer to the question.</div>
     </div>
     <div class="race-card c">
-      <div class="race-letter">C</div>
-      <div class="race-word">Cite Evidence</div>
-      <div class="race-desc">Use words or details from the passage to support your answer.</div>
+      <div class="rc-letter">C</div>
+      <div class="rc-word">Cite Evidence</div>
+      <div class="rc-desc">Use details from the passage to support your answer.</div>
     </div>
     <div class="race-card e">
-      <div class="race-letter">E</div>
-      <div class="race-word">Explain / Extend</div>
-      <div class="race-desc">Explain how your evidence connects to your answer.</div>
+      <div class="rc-letter">E</div>
+      <div class="rc-word">Explain / Extend</div>
+      <div class="rc-desc">Explain how your evidence connects to your answer.</div>
     </div>
   </div>
 
-  <button class="btn btn-primary" onclick="startPractice()">Start Practising →</button>
+  <button class="btn btn-start" onclick="startPractice()">Let's Go! 🎉</button>
 </div>
 
 <!-- ══════════════ PRACTICE ══════════════ -->
 <div id="practice" class="screen">
   <div class="top-bar">
     <div>
-      <div style="font-weight:700;font-size:1.1rem" id="passage-title"></div>
-      <div class="progress-label" id="passage-counter"></div>
+      <div class="passage-name" id="passage-title"></div>
+      <div class="passage-counter" id="passage-counter"></div>
     </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-fill" id="progress-fill"></div>
-    </div>
+    <div class="dot-progress" id="dot-progress"></div>
   </div>
 
   <div class="layout">
     <!-- Left: passage + question -->
     <div>
-      <div class="card" style="margin-bottom:16px">
-        <h2>Reading Passage</h2>
+      <div class="passage-card">
+        <div class="card-section-label">📖 Reading Passage</div>
         <p class="passage-text" id="passage-body"></p>
       </div>
-      <div class="question-box" id="question-text"></div>
+      <div class="question-box">
+        <div class="q-label">❓ Your Question</div>
+        <div class="q-text" id="question-text"></div>
+      </div>
     </div>
 
     <!-- Right: RACE form -->
-    <div class="card">
-      <h2>Your RACE Response</h2>
+    <div class="form-card">
+      <div class="form-title">✏️ Write Your RACE Response</div>
 
       <div class="race-section">
-        <div class="race-label">
+        <div class="section-header">
           <span class="badge r">R</span>
-          <span class="section-title">Restate the Question</span>
+          <span class="section-name">Restate the Question</span>
         </div>
-        <p class="section-hint">Begin with "One way…", "There are several…", or turn the question into a sentence.</p>
+        <p class="section-hint">Try: "One way…" or turn the question into a statement.</p>
         <textarea id="ans-r" placeholder="Restate the question in your own words…" rows="3"></textarea>
       </div>
 
       <div class="race-section">
-        <div class="race-label">
+        <div class="section-header">
           <span class="badge a">A</span>
-          <span class="section-title">Answer the Question</span>
+          <span class="section-name">Answer the Question</span>
         </div>
-        <p class="section-hint">Give your direct answer clearly and completely.</p>
-        <textarea id="ans-a" placeholder="My direct answer is…" rows="3"></textarea>
+        <p class="section-hint">Give your clear, direct answer.</p>
+        <textarea id="ans-a" placeholder="My answer is…" rows="3"></textarea>
       </div>
 
       <div class="race-section">
-        <div class="race-label">
+        <div class="section-header">
           <span class="badge c">C</span>
-          <span class="section-title">Cite Evidence</span>
+          <span class="section-name">Cite Evidence</span>
         </div>
-        <p class="section-hint">Use "According to the text…", "The passage states…", or "For example…"</p>
+        <p class="section-hint">Try: "According to the text…" or "The passage states…"</p>
         <textarea id="ans-c" placeholder="According to the text / passage…" rows="3"></textarea>
       </div>
 
       <div class="race-section">
-        <div class="race-label">
+        <div class="section-header">
           <span class="badge e">E</span>
-          <span class="section-title">Explain / Extend</span>
+          <span class="section-name">Explain / Extend</span>
         </div>
-        <p class="section-hint">Use "This shows…", "This means…", or "This is important because…"</p>
+        <p class="section-hint">Try: "This shows…" or "This is important because…"</p>
         <textarea id="ans-e" placeholder="This shows / means that…" rows="3"></textarea>
       </div>
 
       <div class="btn-row">
-        <button class="btn btn-outline" onclick="showWelcome()">← Back</button>
-        <button class="btn btn-success" onclick="submitAnswer()">Submit Answer ✓</button>
+        <button class="btn btn-ghost" onclick="showWelcome()">← Home</button>
+        <button class="btn btn-submit" onclick="submitAnswer()">Submit ✓</button>
       </div>
     </div>
   </div>
@@ -463,7 +636,7 @@
 <!-- ══════════════ RESULTS ══════════════ -->
 <div id="results" class="screen">
   <div class="score-hero">
-    <div class="score-emoji" id="score-emoji"></div>
+    <span class="score-emoji" id="score-emoji"></span>
     <div>
       <span class="score-number" id="score-num"></span>
       <span class="score-denom"> / 12</span>
@@ -471,14 +644,14 @@
     <div class="score-msg" id="score-msg"></div>
   </div>
 
-  <div id="feedback-r" class="feedback-section r"></div>
-  <div id="feedback-a" class="feedback-section a"></div>
-  <div id="feedback-c" class="feedback-section c"></div>
-  <div id="feedback-e" class="feedback-section e"></div>
+  <div id="feedback-r" class="fb-block r"></div>
+  <div id="feedback-a" class="fb-block a"></div>
+  <div id="feedback-c" class="fb-block c"></div>
+  <div id="feedback-e" class="fb-block e"></div>
 
   <div class="result-actions">
-    <button class="btn btn-outline" onclick="showWelcome()">🏠 Home</button>
-    <button class="btn btn-primary" id="next-btn" onclick="nextPassage()">Next Passage →</button>
+    <button class="btn btn-home" onclick="showWelcome()">🏠 Home</button>
+    <button class="btn btn-next" id="next-btn" onclick="nextPassage()">Next Passage →</button>
   </div>
 </div>
 
@@ -487,7 +660,7 @@
   const passages = [
     {
       title: "The Arctic Fox",
-      tag: "Science & Nature",
+      tag: "🦊 Science & Nature",
       body: `The Arctic fox is one of nature's most remarkable animals. These small foxes live in some of the coldest places on Earth, including northern Canada and the Arctic tundra. Their thick, white fur helps them blend into the snowy landscape and keeps them warm in temperatures as low as −50°C. In summer, their fur changes to brown or grey, helping them hide among rocks and plants. Arctic foxes are omnivores, meaning they eat both plants and animals. They hunt lemmings, birds, and fish, and also eat berries and seaweed when food is scarce. During harsh winters, they often follow polar bears to eat the leftover scraps from their meals.`,
       question: "How does the Arctic fox survive in extremely cold and changing climates?",
       keyWords: ["arctic fox", "survive", "cold", "climate", "fur", "temperature"],
@@ -495,7 +668,7 @@
     },
     {
       title: "Terry Fox",
-      tag: "Canadian History",
+      tag: "🍁 Canadian History",
       body: `Terry Fox was born on July 28, 1958, in Winnipeg, Manitoba, Canada. When he was 18 years old, Terry was diagnosed with bone cancer in his right leg, and doctors had to amputate it. Determined not to let cancer defeat him, Terry decided to run across Canada to raise money and awareness for cancer research. He called his journey the "Marathon of Hope." Terry began his run in St. John's, Newfoundland on April 12, 1980. Running on an artificial leg, he completed about 42 kilometres every day. After 143 days and 5,373 kilometres, Terry had to stop near Thunder Bay, Ontario, because his cancer had spread to his lungs. He passed away on June 28, 1981, but his legacy lives on. The Terry Fox Run, held every year in September, has raised over $850 million for cancer research.`,
       question: "Why is Terry Fox considered a Canadian hero?",
       keyWords: ["terry fox", "hero", "canadian", "cancer", "marathon", "hope"],
@@ -503,7 +676,7 @@
     },
     {
       title: "Photosynthesis",
-      tag: "Science",
+      tag: "🌿 Science",
       body: `Plants are amazing living things that can make their own food through a process called photosynthesis. During photosynthesis, plants use three things: sunlight, water, and carbon dioxide (a gas in the air). The green parts of the plant, especially the leaves, contain a special substance called chlorophyll, which captures energy from sunlight. The plant uses this energy to turn water and carbon dioxide into glucose (a type of sugar) and oxygen. The glucose gives the plant the energy it needs to grow, while the oxygen is released into the air. This is why plants are so important for all life on Earth — they produce the oxygen that humans and animals need to breathe.`,
       question: "Why is photosynthesis important for all living things on Earth?",
       keyWords: ["photosynthesis", "important", "living", "earth", "plants"],
@@ -511,7 +684,7 @@
     },
     {
       title: "The Great Barrier Reef",
-      tag: "Geography",
+      tag: "🌊 Geography",
       body: `The Great Barrier Reef, located off the coast of Queensland, Australia, is the world's largest coral reef system. It stretches over 2,300 kilometres and can even be seen from space. The reef is home to an incredible variety of life, including over 1,500 species of fish, 4,000 types of molluscs, and more than 200 species of birds. Coral reefs are built by tiny animals called coral polyps, which create hard limestone skeletons over thousands of years. Sadly, the Great Barrier Reef is in danger. Rising ocean temperatures caused by climate change lead to "coral bleaching," where the coral loses its colour and eventually dies. Scientists and governments around the world are working together to find ways to protect this natural wonder.`,
       question: "What threats does the Great Barrier Reef face, and why is it important to protect it?",
       keyWords: ["great barrier reef", "threat", "danger", "protect", "important"],
@@ -519,7 +692,7 @@
     },
     {
       title: "Ancient Egypt",
-      tag: "Social Studies",
+      tag: "🏛️ Social Studies",
       body: `Ancient Egypt was one of the world's greatest civilizations, lasting for over 3,000 years along the Nile River in northeastern Africa. The Nile River was essential to Egyptian life — it provided water for drinking and farming, and its yearly floods deposited rich soil along the riverbanks, making the land very fertile. The ancient Egyptians built enormous structures called pyramids as tombs for their pharaohs (kings). The Great Pyramid of Giza, built around 2560 BCE, is one of the Seven Wonders of the Ancient World and still stands today. Ancient Egyptians also developed one of the earliest writing systems, called hieroglyphics, which used pictures and symbols to represent words and sounds.`,
       question: "How did the Nile River shape the development of ancient Egyptian civilization?",
       keyWords: ["nile river", "egypt", "civilization", "development", "shaped"],
@@ -534,7 +707,7 @@
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function showWelcome() { show('welcome'); }
@@ -557,23 +730,21 @@
     document.getElementById('passage-title').textContent = p.title;
     document.getElementById('passage-counter').textContent =
       `Passage ${currentIndex + 1} of ${passages.length}`;
-    document.getElementById('progress-fill').style.width =
-      `${((currentIndex + 1) / passages.length) * 100}%`;
 
-    // Render tag + body
+    // dot progress
+    const dots = document.getElementById('dot-progress');
+    dots.innerHTML = passages.map((_, i) =>
+      `<div class="dot ${i < currentIndex ? 'done' : i === currentIndex ? 'current' : ''}"></div>`
+    ).join('');
+
     document.getElementById('passage-body').innerHTML =
-      `<span class="tag">${p.tag}</span><br>${p.body}`;
-    document.getElementById('question-text').textContent = '❓ ' + p.question;
+      `<span class="passage-tag">${p.tag}</span><br>${p.body}`;
+    document.getElementById('question-text').textContent = p.question;
 
-    // Clear inputs
-    ['r','a','c','e'].forEach(k => {
-      document.getElementById(`ans-${k}`).value = '';
-    });
+    ['r','a','c','e'].forEach(k => { document.getElementById(`ans-${k}`).value = ''; });
   }
 
   /* ══════════════ GRADING ══════════════ */
-
-  // Returns 0-3
   function gradeR(text, passage) {
     const t = text.toLowerCase().trim();
     if (t.length < 10) return 0;
@@ -581,7 +752,6 @@
     const qWords = q.replace(/[^a-z\s]/g, '').split(/\s+/).filter(w => w.length > 3);
     const hits = qWords.filter(w => t.includes(w)).length;
     const ratio = hits / qWords.length;
-    // Must restate (use question words) AND be a statement (not end with ?)
     if (t.endsWith('?')) return 1;
     if (ratio >= 0.5 && t.length >= 20) return 3;
     if (ratio >= 0.3 || t.length >= 30) return 2;
@@ -591,7 +761,6 @@
   function gradeA(text, passage) {
     const t = text.toLowerCase().trim();
     if (t.length < 10) return 0;
-    // Look for direct answer words relevant to question topic
     const keyHits = passage.keyWords.filter(k => t.includes(k)).length;
     if (t.length >= 40 && keyHits >= 2) return 3;
     if (t.length >= 25 && keyHits >= 1) return 2;
@@ -610,7 +779,6 @@
     ];
     const hasCitePhrase = citePhrases.some(ph => t.includes(ph));
     const evidenceHits = passage.evidenceWords.filter(w => t.toLowerCase().includes(w.toLowerCase())).length;
-
     if (hasCitePhrase && evidenceHits >= 1) return 3;
     if (hasCitePhrase || evidenceHits >= 2) return 2;
     if (evidenceHits >= 1 || t.length >= 30) return 1;
@@ -628,65 +796,83 @@
     ];
     const hasExplainPhrase = explainPhrases.some(ph => t.includes(ph));
     const keyHits = passage.keyWords.filter(k => t.includes(k)).length;
-
     if (hasExplainPhrase && (keyHits >= 1 || t.length >= 40)) return 3;
     if (hasExplainPhrase || (keyHits >= 1 && t.length >= 30)) return 2;
     if (t.length >= 25) return 1;
     return 0;
   }
 
-  /* ══════════════ FEEDBACK TEXT ══════════════ */
+  /* ══════════════ FEEDBACK ══════════════ */
   function starsFor(score) {
     return '⭐'.repeat(score) + '☆'.repeat(3 - score);
   }
 
-  function feedbackFor(part, score, answer, passage) {
-    const tips = {
+  function feedbackFor(part, score) {
+    const bank = {
       r: [
-        { score: 0, comment: "Your restatement is missing. Try turning the question into a statement.", tip: 'Example: If the question is "Why is the sky blue?", write "The sky is blue because…"' },
-        { score: 1, comment: "Good start! Make sure you don't end your restatement with a question mark — turn it into a statement.", tip: 'Tip: Use words from the question in your opening sentence.' },
-        { score: 2, comment: "Nice restatement! Try to include a few more key words from the question to make it even stronger.", tip: null },
-        { score: 3, comment: "Excellent! You clearly restated the question as a statement using key words.", tip: null },
+        { score:0, comment:"Your restatement is missing. Try turning the question into a statement.", tip:'Example: If the question is "Why is the sky blue?", write "The sky is blue because…"' },
+        { score:1, comment:"Good start! Make sure you don't end your restatement with a question mark — turn it into a statement.", tip:"Tip: Use key words from the question in your opening sentence." },
+        { score:2, comment:"Nice restatement! Include a few more key words from the question to make it even stronger.", tip:null },
+        { score:3, comment:"Excellent! You clearly restated the question as a statement using key words.", tip:null },
       ],
       a: [
-        { score: 0, comment: "No answer found. Make sure you directly answer the question asked.", tip: 'Tip: After restating, clearly state your answer in 1-2 sentences.' },
-        { score: 1, comment: "You started an answer, but try to be more specific and complete.", tip: 'Tip: A good answer is clear and uses topic words from the passage.' },
-        { score: 2, comment: "Good answer! Adding a bit more detail would make it even stronger.", tip: null },
-        { score: 3, comment: "Excellent! Your answer is clear, direct, and specific.", tip: null },
+        { score:0, comment:"No answer found. Make sure you directly answer the question asked.", tip:"Tip: After restating, clearly state your answer in 1–2 sentences." },
+        { score:1, comment:"You started an answer, but try to be more specific and complete.", tip:"Tip: A good answer is clear and uses topic words from the passage." },
+        { score:2, comment:"Good answer! Adding a bit more detail would make it even stronger.", tip:null },
+        { score:3, comment:"Excellent! Your answer is clear, direct, and specific.", tip:null },
       ],
       c: [
-        { score: 0, comment: "You need to cite evidence from the passage. Use a phrase like "According to the text…" or "The passage states…"", tip: 'Tip: Copy or paraphrase a specific detail from the reading.' },
-        { score: 1, comment: "You included some details, but try using a citation phrase like "According to the text…" to make it clearer.", tip: 'Tip: Citation phrases show the reader you are using the text.' },
-        { score: 2, comment: "Good evidence! Using a citation phrase like "According to the text…" would make this even better.", tip: null },
-        { score: 3, comment: "Great job citing evidence! You used a citation phrase and included a specific detail from the passage.", tip: null },
+        { score:0, comment:'You need to cite evidence from the passage. Use a phrase like "According to the text…" or "The passage states…"', tip:"Tip: Copy or paraphrase a specific detail from the reading." },
+        { score:1, comment:'You included some details, but try using a citation phrase like "According to the text…" to make it clearer.', tip:"Tip: Citation phrases show the reader you are using the text." },
+        { score:2, comment:'Good evidence! Using a citation phrase like "According to the text…" would make this even better.', tip:null },
+        { score:3, comment:"Great job citing evidence! You used a citation phrase and a specific detail from the passage.", tip:null },
       ],
       e: [
-        { score: 0, comment: "The explanation is missing. Tell the reader WHY the evidence matters.", tip: 'Tip: Start with "This shows…" or "This means…" and connect back to your answer.' },
-        { score: 1, comment: "You started explaining, but try to connect the evidence more clearly to your answer.", tip: 'Tip: Use "This shows…" or "This is important because…" to guide your explanation.' },
-        { score: 2, comment: "Good explanation! Adding a sentence about why this matters would make it even stronger.", tip: null },
-        { score: 3, comment: "Excellent explanation! You clearly connected the evidence back to the question.", tip: null },
+        { score:0, comment:"The explanation is missing. Tell the reader WHY the evidence matters.", tip:'Tip: Start with "This shows…" or "This means…" and connect back to your answer.' },
+        { score:1, comment:"You started explaining, but try to connect the evidence more clearly to your answer.", tip:'Tip: Use "This shows…" or "This is important because…" to guide your explanation.' },
+        { score:2, comment:"Good explanation! Adding a sentence about why this matters would strengthen it.", tip:null },
+        { score:3, comment:"Excellent explanation! You clearly connected the evidence back to the question.", tip:null },
       ],
     };
-
-    const entry = tips[part].find(t => t.score === score) || tips[part][tips[part].length - 1];
-    return entry;
+    return bank[part].find(e => e.score === score);
   }
 
-  function renderFeedbackBlock(id, cssClass, letter, word, score, answer, passage) {
-    const fb = feedbackFor(cssClass, score, answer, passage);
-    const el = document.getElementById(id);
-    el.innerHTML = `
+  function renderFeedback(id, cls, letter, word, score, answer) {
+    const fb = feedbackFor(cls, score);
+    document.getElementById(id).innerHTML = `
       <div class="fb-header">
         <div class="fb-title">
-          <span class="badge ${cssClass}">${letter}</span>
+          <span class="badge ${cls}">${letter}</span>
           <span>${word}</span>
         </div>
         <span class="stars">${starsFor(score)}</span>
       </div>
-      <div class="fb-student-answer">"${answer.trim() || '(no answer given)'}"</div>
+      <div class="fb-answer">"${answer.trim() || '(no answer given)'}"</div>
       <div class="fb-comment">${fb.comment}</div>
       ${fb.tip ? `<div class="tip-box">💡 ${fb.tip}</div>` : ''}
     `;
+  }
+
+  /* ══════════════ CONFETTI ══════════════ */
+  function launchConfetti(count) {
+    const layer = document.getElementById('confetti-layer');
+    layer.innerHTML = '';
+    const colors = ['#ef4444','#f97316','#fbbf24','#22c55e','#3b82f6','#a855f7','#ec4899'];
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `
+        left: ${Math.random() * 100}%;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        width: ${6 + Math.random() * 8}px;
+        height: ${6 + Math.random() * 8}px;
+        border-radius: ${Math.random() > .5 ? '50%' : '2px'};
+        animation-duration: ${1.5 + Math.random() * 2}s;
+        animation-delay: ${Math.random() * .8}s;
+      `;
+      layer.appendChild(el);
+    }
+    setTimeout(() => { layer.innerHTML = ''; }, 4000);
   }
 
   /* ══════════════ SUBMIT ══════════════ */
@@ -698,36 +884,37 @@
     const ansE = document.getElementById('ans-e').value;
 
     if ([ansR, ansA, ansC, ansE].every(a => a.trim().length === 0)) {
-      alert('Please write your RACE response before submitting!');
+      alert('Please write your RACE response before submitting! ✏️');
       return;
     }
 
-    const scoreR = gradeR(ansR, p);
-    const scoreA = gradeA(ansA, p);
-    const scoreC = gradeC(ansC, p);
-    const scoreE = gradeE(ansE, p);
-    const total = scoreR + scoreA + scoreC + scoreE;
+    const sR = gradeR(ansR, p);
+    const sA = gradeA(ansA, p);
+    const sC = gradeC(ansC, p);
+    const sE = gradeE(ansE, p);
+    const total = sR + sA + sC + sE;
 
-    // Score hero
     document.getElementById('score-num').textContent = total;
-    const emoji = total >= 11 ? '🏆' : total >= 8 ? '🌟' : total >= 5 ? '👍' : '💪';
-    const msg = total >= 11 ? 'Outstanding work! You nailed the RACE method!'
-              : total >= 8  ? 'Great job! You have a solid RACE response.'
-              : total >= 5  ? 'Good effort! Review the tips to level up your RACE.'
-              :               'Keep practising — every RACE gets better!';
-    document.getElementById('score-emoji').textContent = emoji;
-    document.getElementById('score-msg').textContent = msg;
 
-    // Feedback blocks
-    renderFeedbackBlock('feedback-r', 'r', 'R', 'Restate the Question', scoreR, ansR, p);
-    renderFeedbackBlock('feedback-a', 'a', 'A', 'Answer the Question',  scoreA, ansA, p);
-    renderFeedbackBlock('feedback-c', 'c', 'C', 'Cite Evidence',        scoreC, ansC, p);
-    renderFeedbackBlock('feedback-e', 'e', 'E', 'Explain / Extend',     scoreE, ansE, p);
+    const configs = [
+      { min:11, emoji:'🏆', msg:'Outstanding! You absolutely nailed the RACE method!' },
+      { min:8,  emoji:'🌟', msg:'Awesome work! You have a strong RACE response.' },
+      { min:5,  emoji:'👍', msg:'Good effort! Check the tips below to level up your RACE.' },
+      { min:0,  emoji:'💪', msg:'Keep practising — every attempt makes you better!' },
+    ];
+    const cfg = configs.find(c => total >= c.min);
+    document.getElementById('score-emoji').textContent = cfg.emoji;
+    document.getElementById('score-msg').textContent   = cfg.msg;
 
-    // Next button label
+    if (total >= 8) launchConfetti(total >= 11 ? 90 : 50);
+
+    renderFeedback('feedback-r', 'r', 'R', 'Restate the Question', sR, ansR);
+    renderFeedback('feedback-a', 'a', 'A', 'Answer the Question',  sA, ansA);
+    renderFeedback('feedback-c', 'c', 'C', 'Cite Evidence',        sC, ansC);
+    renderFeedback('feedback-e', 'e', 'E', 'Explain / Extend',     sE, ansE);
+
     const isLast = currentIndex === passages.length - 1;
-    const nextBtn = document.getElementById('next-btn');
-    nextBtn.textContent = isLast ? '🔄 Start Over' : 'Next Passage →';
+    document.getElementById('next-btn').textContent = isLast ? '🔄 Start Over' : 'Next Passage →';
 
     show('results');
   }
