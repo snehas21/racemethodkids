@@ -514,6 +514,32 @@
       flex-wrap: wrap;
     }
 
+    /* ── ROUND COMPLETE ── */
+    #round-complete {
+      max-width: 560px;
+      margin: 48px auto 0;
+      text-align: center;
+    }
+
+    .rc-trophy { font-size: 88px; display: block; margin-bottom: 14px; animation: popIn .6s cubic-bezier(.34,1.56,.64,1) both; }
+
+    .rc-title {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .rc-sub {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+
+    .rc-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 680px) {
       .layout, .race-grid { grid-template-columns: 1fr; }
@@ -633,6 +659,20 @@
   </div>
 </div>
 
+<!-- ══════════════ ROUND COMPLETE ══════════════ -->
+<div id="round-complete" class="screen">
+  <span class="rc-trophy">🎊</span>
+  <h2 class="rc-title">Round <span id="rc-round-num"></span> Complete!</h2>
+  <p class="rc-sub">
+    Amazing — you practised all <strong>5 passages</strong>! 🌟<br>
+    Ready for a fresh shuffle in Round <span id="rc-next-num"></span>?
+  </p>
+  <div class="rc-actions">
+    <button class="btn btn-home" onclick="showWelcome()">🏠 Home</button>
+    <button class="btn btn-start" onclick="startNextRound()">Start Round <span id="rc-next-num2"></span> →</button>
+  </div>
+</div>
+
 <!-- ══════════════ RESULTS ══════════════ -->
 <div id="results" class="screen">
   <div class="score-hero">
@@ -701,7 +741,30 @@
   ];
 
   /* ══════════════ STATE ══════════════ */
-  let currentIndex = 0;
+  let currentIndex = 0;  // index into passages[] for the current card
+  let queue     = [];    // shuffled indices still to be shown this round
+  let roundPos  = 0;     // how many passages shown so far in this round
+  let roundNum  = 1;     // which round we're on
+
+  /* ══════════════ HELPERS ══════════════ */
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function freshQueue() {
+    return shuffle(passages.map((_, i) => i));
+  }
+
+  function shiftAndLoad() {
+    currentIndex = queue.shift();
+    roundPos++;
+    loadPassage();
+  }
 
   /* ══════════════ NAVIGATION ══════════════ */
   function show(id) {
@@ -713,14 +776,32 @@
   function showWelcome() { show('welcome'); }
 
   function startPractice() {
-    currentIndex = 0;
-    loadPassage();
+    roundNum = 1;
+    roundPos = 0;
+    queue = freshQueue();
+    shiftAndLoad();
     show('practice');
   }
 
   function nextPassage() {
-    currentIndex = (currentIndex + 1) % passages.length;
-    loadPassage();
+    if (queue.length === 0) {
+      // all passages done — show round-complete screen
+      launchConfetti(80);
+      document.getElementById('rc-round-num').textContent  = roundNum;
+      document.getElementById('rc-next-num').textContent   = roundNum + 1;
+      document.getElementById('rc-next-num2').textContent  = roundNum + 1;
+      show('round-complete');
+      return;
+    }
+    shiftAndLoad();
+    show('practice');
+  }
+
+  function startNextRound() {
+    roundNum++;
+    roundPos = 0;
+    queue = freshQueue();
+    shiftAndLoad();
     show('practice');
   }
 
@@ -729,12 +810,12 @@
     const p = passages[currentIndex];
     document.getElementById('passage-title').textContent = p.title;
     document.getElementById('passage-counter').textContent =
-      `Passage ${currentIndex + 1} of ${passages.length}`;
+      `Round ${roundNum} · Passage ${roundPos} of ${passages.length}`;
 
-    // dot progress
+    // dot progress: filled = completed this round, current = now, empty = upcoming
     const dots = document.getElementById('dot-progress');
-    dots.innerHTML = passages.map((_, i) =>
-      `<div class="dot ${i < currentIndex ? 'done' : i === currentIndex ? 'current' : ''}"></div>`
+    dots.innerHTML = Array.from({ length: passages.length }, (_, i) =>
+      `<div class="dot ${i < roundPos - 1 ? 'done' : i === roundPos - 1 ? 'current' : ''}"></div>`
     ).join('');
 
     document.getElementById('passage-body').innerHTML =
@@ -913,8 +994,8 @@
     renderFeedback('feedback-c', 'c', 'C', 'Cite Evidence',        sC, ansC);
     renderFeedback('feedback-e', 'e', 'E', 'Explain / Extend',     sE, ansE);
 
-    const isLast = currentIndex === passages.length - 1;
-    document.getElementById('next-btn').textContent = isLast ? '🔄 Start Over' : 'Next Passage →';
+    const isLastInRound = queue.length === 0;
+    document.getElementById('next-btn').textContent = isLastInRound ? '🎉 Finish Round' : 'Next Passage →';
 
     show('results');
   }
