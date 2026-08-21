@@ -179,6 +179,106 @@
     }
     .btn-home:hover { background: #f9fafb; }
 
+    /* stats card on welcome screen */
+    .stats-card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 22px 24px 26px;
+      margin-top: 32px;
+      box-shadow: 0 4px 18px rgba(0,0,0,.09);
+      text-align: center;
+    }
+
+    .stats-title {
+      font-size: .78rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .stat-num {
+      font-size: 1.9rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ══════════════ SCORE HISTORY ══════════════ */
+    #history { max-width: 680px; margin: 28px auto 0; }
+
+    .history-card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.07);
+      margin-bottom: 16px;
+    }
+
+    .history-title-main {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .history-empty {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center;
+      padding: 24px 0;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #f8fafc;
+      margin-bottom: 8px;
+    }
+
+    .history-name {
+      font-weight: 800;
+      font-size: .93rem;
+      color: var(--text);
+    }
+
+    .history-date {
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .history-score {
+      font-weight: 900;
+      font-size: 1.15rem;
+      color: #6366f1;
+      flex-shrink: 0;
+    }
+
     /* ══════════════ PRACTICE ══════════════ */
     #practice {
       max-width: 960px;
@@ -586,6 +686,25 @@
   </div>
 
   <button class="btn btn-start" onclick="startPractice()">Let's Go! 🎉</button>
+
+  <div class="stats-card">
+    <div class="stats-title">🏅 Your Progress</div>
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-num" id="stat-attempts">0</div>
+        <div class="stat-label">Attempts</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="stat-best">0</div>
+        <div class="stat-label">Best Score</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="stat-avg">0</div>
+        <div class="stat-label">Avg Score</div>
+      </div>
+    </div>
+    <button class="btn btn-ghost" onclick="showHistory()">📜 View Score History</button>
+  </div>
 </div>
 
 <!-- ══════════════ PRACTICE ══════════════ -->
@@ -673,6 +792,18 @@
   </div>
 </div>
 
+<!-- ══════════════ SCORE HISTORY ══════════════ -->
+<div id="history" class="screen">
+  <div class="history-card">
+    <h2 class="history-title-main">📜 Score History</h2>
+    <div id="history-list"></div>
+  </div>
+  <div class="result-actions">
+    <button class="btn btn-home" onclick="showWelcome()">🏠 Home</button>
+    <button class="btn btn-ghost" onclick="clearHistory()">🗑️ Clear History</button>
+  </div>
+</div>
+
 <!-- ══════════════ RESULTS ══════════════ -->
 <div id="results" class="screen">
   <div class="score-hero">
@@ -738,7 +869,113 @@
       keyWords: ["nile river", "egypt", "civilization", "development", "shaped"],
       evidenceWords: ["fertile", "flood", "soil", "water", "farming", "3,000 year", "riverbank"],
     },
+    {
+      title: "Honeybees",
+      tag: "🐝 Science & Nature",
+      body: `Honeybees are small insects that play a huge role in keeping our planet healthy. A single bee colony can contain up to 60,000 bees, all working together to keep the hive running. Worker bees fly from flower to flower collecting nectar and pollen, which they turn into honey to feed the colony. As bees move between flowers, pollen sticks to their fuzzy bodies and rubs off on the next flower they visit. This process, called pollination, helps plants make seeds and fruit. Scientists estimate that bees pollinate about one-third of the food crops humans eat, including apples, almonds, and blueberries. Sadly, bee populations have been declining due to pesticides, habitat loss, and disease, which worries scientists because so much of our food supply depends on them.`,
+      question: "Why are honeybees so important to humans and the food we eat?",
+      keyWords: ["honeybee", "important", "humans", "food", "eat"],
+      evidenceWords: ["pollination", "nectar", "pollen", "one-third", "crops", "60,000", "colony"],
+    },
+    {
+      title: "The Titanic",
+      tag: "🚢 History",
+      body: `The RMS Titanic was a massive ocean liner that set sail from Southampton, England, on April 10, 1912, headed for New York City. At the time, it was the largest ship ever built, and people called it "unsinkable" because of its advanced design, which included 16 watertight compartments. On the night of April 14, the Titanic struck an iceberg in the North Atlantic Ocean. The impact tore open several compartments, and water quickly flooded in. The ship sank in less than three hours, early on April 15. Tragically, there were not enough lifeboats for everyone on board — only about 2,200 passengers and crew were on the ship, and roughly 1,500 people died. After the disaster, new maritime laws were created requiring ships to carry enough lifeboats for every person aboard.`,
+      question: "What caused the Titanic disaster, and how did it change safety rules at sea?",
+      keyWords: ["titanic", "disaster", "sink", "safety", "change"],
+      evidenceWords: ["iceberg", "watertight compartment", "lifeboats", "1,500", "flooded", "maritime law"],
+    },
+    {
+      title: "Volcanoes",
+      tag: "🌋 Earth Science",
+      body: `A volcano is an opening in the Earth's surface that allows hot melted rock, gases, and ash to escape from deep underground. This melted rock is called magma while it is inside the Earth, and lava once it reaches the surface. Volcanoes form where pressure builds up beneath the Earth's crust until it finally breaks through in an eruption. Some eruptions are slow, with lava oozing out gently, while others are explosive and can blast ash miles into the sky. Volcanic eruptions can be dangerous, destroying towns and affecting air travel, but volcanoes also create new land and produce very fertile soil once the rock breaks down over time. Scientists called volcanologists study volcanoes closely, watching for warning signs like small earthquakes and gas leaks so they can warn people before a dangerous eruption happens.`,
+      question: "How do volcanoes form, and what makes them both dangerous and useful?",
+      keyWords: ["volcano", "form", "dangerous", "useful", "eruption"],
+      evidenceWords: ["magma", "lava", "crust", "ash", "fertile soil", "earthquake", "volcanologist"],
+    },
+    {
+      title: "Helen Keller",
+      tag: "✨ Biography",
+      body: `Helen Keller was born in 1880 in Alabama. When she was just 19 months old, an illness left her both deaf and blind, making it extremely difficult for her to communicate with the world around her. When Helen was six, a teacher named Anne Sullivan came to help her. Anne patiently spelled words into Helen's hand using touch, and one day, while spelling the word "water" as cool water ran over Helen's other hand, Helen suddenly understood that objects had names. This breakthrough opened up an entirely new world for her. Helen went on to learn to read Braille and even to speak, and in 1904 she became the first deaf-blind person to earn a college degree. She spent the rest of her life as an author and activist, inspiring people with disabilities around the world.`,
+      question: "How did Helen Keller overcome her disabilities to become an inspiration to others?",
+      keyWords: ["helen keller", "overcome", "disability", "inspire", "deaf", "blind"],
+      evidenceWords: ["anne sullivan", "water", "braille", "college degree", "1904", "author", "activist"],
+    },
+    {
+      title: "The Water Cycle",
+      tag: "💧 Earth Science",
+      body: `The water cycle describes how water moves continuously around the Earth, and it has no true beginning or end. It starts when the sun heats up water in oceans, lakes, and rivers, causing it to evaporate and turn into water vapor that rises into the sky. As the vapor rises, it cools and condenses into tiny droplets, forming clouds. When enough droplets gather together, they become heavy and fall back to Earth as precipitation, such as rain, snow, or hail. Some of this water soaks into the ground and becomes groundwater, while the rest flows into streams and rivers that eventually lead back to the ocean, where the entire cycle begins again. This constant recycling of water is essential because it provides fresh water for plants, animals, and people all over the planet.`,
+      question: "How does the water cycle keep fresh water available for living things on Earth?",
+      keyWords: ["water cycle", "fresh water", "living things", "earth", "available"],
+      evidenceWords: ["evaporate", "condense", "clouds", "precipitation", "groundwater", "rivers", "ocean"],
+    },
   ];
+
+  /* ══════════════ SCORE TRACKING ══════════════ */
+  const SCORES_KEY = 'raceMethodScores';
+
+  function loadScores() {
+    try {
+      const raw = localStorage.getItem(SCORES_KEY);
+      const data = raw ? JSON.parse(raw) : [];
+      return Array.isArray(data) ? data : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveScoreAttempt(record) {
+    const scores = loadScores();
+    scores.unshift(record);
+    if (scores.length > 50) scores.length = 50;
+    try { localStorage.setItem(SCORES_KEY, JSON.stringify(scores)); } catch (e) {}
+  }
+
+  function clearHistory() {
+    if (confirm('Clear all score history? This cannot be undone.')) {
+      try { localStorage.removeItem(SCORES_KEY); } catch (e) {}
+      refreshStats();
+      renderHistory();
+    }
+  }
+
+  function refreshStats() {
+    const scores = loadScores();
+    const attempts = scores.length;
+    const best = attempts ? Math.max(...scores.map(s => s.total)) : 0;
+    const avg = attempts ? (scores.reduce((sum, s) => sum + s.total, 0) / attempts) : 0;
+    document.getElementById('stat-attempts').textContent = attempts;
+    document.getElementById('stat-best').textContent = best;
+    document.getElementById('stat-avg').textContent = attempts ? avg.toFixed(1) : '0';
+  }
+
+  function showHistory() {
+    renderHistory();
+    show('history');
+  }
+
+  function renderHistory() {
+    const scores = loadScores();
+    const list = document.getElementById('history-list');
+    if (!scores.length) {
+      list.innerHTML = '<div class="history-empty">No attempts yet — go practice a passage! 🚀</div>';
+      return;
+    }
+    list.innerHTML = scores.map(s => {
+      const d = new Date(s.date);
+      const when = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) +
+        ' · ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+      return `
+        <div class="history-item">
+          <div>
+            <div class="history-name">${s.title}</div>
+            <div class="history-date">Round ${s.round} · ${when}</div>
+          </div>
+          <div class="history-score">${s.total}/12</div>
+        </div>
+      `;
+    }).join('');
+  }
 
   /* ══════════════ STATE ══════════════ */
   let currentIndex = 0;  // index into passages[] for the current card
@@ -773,7 +1010,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function showWelcome() { show('welcome'); }
+  function showWelcome() { refreshStats(); show('welcome'); }
 
   function startPractice() {
     roundNum = 1;
@@ -987,6 +1224,8 @@
     document.getElementById('score-emoji').textContent = cfg.emoji;
     document.getElementById('score-msg').textContent   = cfg.msg;
 
+    saveScoreAttempt({ title: p.title, total, round: roundNum, date: Date.now() });
+
     if (total >= 8) launchConfetti(total >= 11 ? 90 : 50);
 
     renderFeedback('feedback-r', 'r', 'R', 'Restate the Question', sR, ansR);
@@ -999,6 +1238,9 @@
 
     show('results');
   }
+
+  /* ══════════════ INIT ══════════════ */
+  refreshStats();
 </script>
 </body>
 </html>
