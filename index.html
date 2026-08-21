@@ -783,7 +783,7 @@
   <span class="rc-trophy">🎊</span>
   <h2 class="rc-title">Round <span id="rc-round-num"></span> Complete!</h2>
   <p class="rc-sub">
-    Amazing — you practised all <strong>5 passages</strong>! 🌟<br>
+    Amazing — you practised all <strong><span id="rc-passage-count"></span> passages</strong>! 🌟<br>
     Ready for a fresh shuffle in Round <span id="rc-next-num"></span>?
   </p>
   <div class="rc-actions">
@@ -909,6 +909,46 @@
       keyWords: ["water cycle", "fresh water", "living things", "earth", "available"],
       evidenceWords: ["evaporate", "condense", "clouds", "precipitation", "groundwater", "rivers", "ocean"],
     },
+    {
+      title: "Monarch Butterfly Migration",
+      tag: "🦋 Science & Nature",
+      body: `Every fall, millions of monarch butterflies begin one of the most amazing journeys in the animal kingdom. Monarchs that live in Canada and the northern United States cannot survive cold winters, so they fly up to 4,800 kilometres south to the forests of central Mexico. What makes this trip so surprising is that no single butterfly completes the whole round trip — it can take three or four generations of monarchs to fly north again in spring. Scientists believe monarchs use the position of the sun and an internal magnetic compass to find their way, even though each butterfly is making the journey for the very first time. Along the way, monarchs rely on milkweed plants, which are the only food their caterpillars can eat. Because farms and cities have replaced many wild milkweed fields, monarch populations have dropped sharply, and conservationists are now planting milkweed gardens to help protect this incredible migration.`,
+      question: "How do monarch butterflies complete their long migration, and why is it considered so remarkable?",
+      keyWords: ["monarch", "migration", "butterfly", "journey", "remarkable"],
+      evidenceWords: ["4,800", "mexico", "generations", "magnetic compass", "milkweed", "caterpillar"],
+    },
+    {
+      title: "The Wright Brothers",
+      tag: "✈️ History & Invention",
+      body: `Orville and Wilbur Wright were two brothers from Dayton, Ohio, who dreamed of building a machine that could fly. In the late 1800s, the brothers ran a bicycle shop, and the skills they learned building and fixing bicycles helped them understand balance and mechanics. They studied birds, read about other inventors' failed flying attempts, and built a wind tunnel to test different wing shapes. On December 17, 1903, at Kitty Hawk, North Carolina, Orville piloted their aircraft, called the Wright Flyer, for 12 seconds and travelled 37 metres — the first successful powered, controlled flight by a heavier-than-air machine. The brothers made three more flights that day, with the longest lasting 59 seconds. Their invention did not appear overnight; it was the result of years of careful testing, note-taking, and learning from mistakes. Their achievement opened the door to modern air travel, forever changing how people and goods move around the world.`,
+      question: "How did the Wright brothers' hard work and careful testing lead to the first successful airplane flight?",
+      keyWords: ["wright brothers", "airplane", "flight", "invention", "hard work"],
+      evidenceWords: ["kitty hawk", "1903", "wind tunnel", "bicycle shop", "12 seconds", "37 metres", "wright flyer"],
+    },
+    {
+      title: "Mount Everest",
+      tag: "🏔️ Geography",
+      body: `Mount Everest, located in the Himalaya mountain range on the border between Nepal and Tibet, is the tallest mountain above sea level on Earth, standing at 8,849 metres. Climbing Everest is extremely dangerous because of freezing temperatures, powerful winds, and thin air that makes it hard to breathe — many climbers use bottled oxygen above 8,000 metres, an area nicknamed the "death zone." On May 29, 1953, Sir Edmund Hillary of New Zealand and Tenzing Norgay, a Sherpa mountaineer from Nepal, became the first climbers confirmed to reach the summit. Their success took years of planning, teamwork, and support from many other climbers and porters who carried supplies up the mountain. Today, hundreds of people attempt to climb Everest every year, guided by experienced Sherpas who know the mountain well. Even with modern equipment, the climb remains risky, and it reminds people just how powerful and unpredictable nature can be.`,
+      question: "Why is climbing Mount Everest so difficult and dangerous, and how did Hillary and Norgay achieve their historic climb?",
+      keyWords: ["everest", "climb", "dangerous", "difficult", "hillary", "norgay"],
+      evidenceWords: ["8,849", "death zone", "oxygen", "1953", "sherpa", "himalaya", "summit"],
+    },
+    {
+      title: "Rosa Parks",
+      tag: "✊ Social Studies",
+      body: `Rosa Parks was an African American woman living in Montgomery, Alabama, during a time when laws forced Black and white people to be separated in many public places, including buses. On December 1, 1955, Rosa was riding a city bus home from work when the driver ordered her to give up her seat to a white passenger. Rosa refused to move and was arrested for breaking the segregation laws. Her quiet act of courage inspired local civil rights leaders, including a young minister named Martin Luther King Jr., to organize the Montgomery Bus Boycott. For 381 days, thousands of Black residents refused to ride the city buses, choosing instead to walk, carpool, or bike, even though it made their daily lives much harder. The boycott put huge financial pressure on the bus company and drew national attention to unfair segregation laws. In 1956, the United States Supreme Court ruled that bus segregation was unconstitutional, and Rosa Parks became known as one of the most important figures of the American civil rights movement.`,
+      question: "How did Rosa Parks' refusal to give up her seat help change unfair laws in the United States?",
+      keyWords: ["rosa parks", "refuse", "change", "unfair law", "segregation"],
+      evidenceWords: ["montgomery", "1955", "boycott", "381 day", "martin luther king", "supreme court", "1956"],
+    },
+    {
+      title: "Sea Turtles",
+      tag: "🐢 Science & Nature",
+      body: `Sea turtles are ancient reptiles that have lived in the world's oceans for more than 100 million years, even longer than dinosaurs roamed the Earth. Unlike most other turtles, sea turtles have long, flat flippers instead of legs, which make them powerful swimmers but clumsy movers on land. Female sea turtles come ashore only to lay their eggs, digging deep nests in the sand at night and burying up to 100 eggs at a time before returning to the sea. Amazingly, many female sea turtles return to lay their eggs on the very same beach where they themselves hatched decades earlier, a behavior scientists believe is guided by the Earth's magnetic field. Sea turtle populations face serious threats today, including plastic pollution, fishing nets, and the loss of nesting beaches to coastal development. Because baby turtles can mistake plastic bags for jellyfish, one of their favorite foods, ocean plastic is especially dangerous. Many countries now protect nesting beaches and limit fishing practices to help these ancient animals survive.`,
+      question: "What makes sea turtles unique, and what dangers do they face today?",
+      keyWords: ["sea turtle", "unique", "danger", "threat", "survive"],
+      evidenceWords: ["100 million", "flippers", "nest", "magnetic field", "plastic", "jellyfish", "hatch"],
+    },
   ];
 
   /* ══════════════ SCORE TRACKING ══════════════ */
@@ -1025,6 +1065,7 @@
       // all passages done — show round-complete screen
       launchConfetti(80);
       document.getElementById('rc-round-num').textContent  = roundNum;
+      document.getElementById('rc-passage-count').textContent = passages.length;
       document.getElementById('rc-next-num').textContent   = roundNum + 1;
       document.getElementById('rc-next-num2').textContent  = roundNum + 1;
       show('round-complete');
